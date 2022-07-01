@@ -17,7 +17,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         let resultHM = url.select('#wob_hm').text(); //습도
 
         if (resultDC == '') {
-          replier.reply('지금 현재 ' + weather + '의 날씨를 불러올 수 없습니다.');
+          replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n 날씨 서대문역');
 
           return;
         }
@@ -42,7 +42,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         return;
       }
     } else {
-      replier.reply('지역을 잘못 나타냈어요(EX./날씨 "조회할 지역")');
+      replier.reply('지역을 잘못 나타냈어요(EX.날씨 "조회할 지역")');
 
       return;
     }

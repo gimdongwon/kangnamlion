@@ -1,3 +1,10 @@
+# Kangnam Lion Kakaotalk bot
+
+android 폴더에 있는 source code를 scrcpy를 사용해서 복붙으로 개발중.
+
+etc : android 폴더 빼고는 현재 사용하지 않음.
+## Todo
+
 (6.29) 시점에서 TodoList.
 
 1. opensea 카카오 링크로 정리
