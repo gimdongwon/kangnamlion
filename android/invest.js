@@ -1,10 +1,13 @@
+// const { KakaoLinkClient: KakaoLinkClient } = require('kakaolink');
+// const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
+// Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
 const { KakaoLinkClient: KakaoLinkClient } = require('kakaolink');
-const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
-Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
-
-const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
+const Kakao = new KakaoLinkClient('806c389b4ca349f0748523283881e63d', 'https://developers.kakao.com');
+Kakao.login('dongwon@likelion.org', 'ehddnjs89!'); // 카카오 계정 아이디와 비밀번호
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
+  const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
+
   var str_split_Arr = msg.split(' ');
   let market = str_split_Arr[0],
     target = str_split_Arr[1];
@@ -24,8 +27,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       ).get();
       */
       //image_url = image_url.select('img[jsname=HiaYvf]').attr('src');
-      // var image_url = data.select('div[class=gyEfO JlxBoc]').text();
-      var image_url = data.select('img[id=tsuid20]').text();
+      var image_url = data.select('div[class=gyEfO JlxBoc]').text();
+      // var image_url = data.select('div.JlxBoc > div.PZPZlf').attr('data-lpage');
       data = data.select('g-card-section').get(0);
 
       var title = data.select('span[class=aMEhee PZPZlF]').text();
