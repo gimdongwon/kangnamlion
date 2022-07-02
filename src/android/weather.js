@@ -1,10 +1,18 @@
-function response(room, msg, sender, isGroupChat, replier) {
-  if (msg.startsWith('날씨 ')) {
-    let weather = msg.slice(4);
+const { KakaoLinkClient } = require('kakaolink');
 
-    if (isNaN(weather)) {
+const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
+Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
+
+function response(room, msg, sender, isGroupChat, replier) {
+  if (sender === '용키') return;
+  if (msg.startsWith('날씨 ')) {
+    let region = msg.slice(3);
+
+    if (isNaN(region)) {
       try {
-        let url = org.jsoup.Jsoup.connect('https://www.google.com/search?q=' + weather + ' 날씨').get();
+        let url = org.jsoup.Jsoup.connect('https://www.google.com/search?q=' + region + ' 날씨').get();
+
+        let image = 'http:' + url.select('#wob_tci').attr('src');
 
         let resultDC = url.select('#wob_dc').text(); //상태?
 
@@ -17,27 +25,40 @@ function response(room, msg, sender, isGroupChat, replier) {
         let resultHM = url.select('#wob_hm').text(); //습도
 
         if (resultDC == '') {
-          replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n 날씨 서대문역');
+          replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
 
           return;
         }
 
-        replier.reply(
-          '지금 현재 ' +
-            weather +
-            '의 날씨는 "' +
-            resultDC +
-            '"입니다. 온도는 ' +
-            resultTM +
-            '°C 입니다.\n\n강수확률: ' +
-            resultPP +
-            '\n풍속: ' +
-            resultWS +
-            '\n습도: ' +
-            resultHM
-        );
+        Kakao.sendLink(room, {
+          template_id: 79058,
+          template_args: {
+            image: image,
+            region: region,
+            status: resultDC,
+            precipitation: resultPP,
+            temperature: resultTM,
+            wind: resultWS,
+            humidity: resultHM,
+          },
+        });
+
+        // replier.reply(
+        //   '지금 현재 ' +
+        //     region +
+        //     '의 날씨는 "' +
+        //     resultDC +
+        //     '"입니다. 온도는 ' +
+        //     resultTM +
+        //     '°C 입니다.\n\n강수확률: ' +
+        //     resultPP +
+        //     '\n풍속: ' +
+        //     resultWS +
+        //     '\n습도: ' +
+        //     resultHM
+        // );
       } catch (e) {
-        replier.reply('불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
+        replier.reply(e, '불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
 
         return;
       }
