@@ -2,21 +2,21 @@ importClass(org.jsoup.Jsoup);
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName, threadId) {
   if (msg.startsWith('!김프')) {
-    var coin = 'BTC';
+    const coin = 'BTC';
 
-    //업비트 btc 가격
+    // 업비트 btc 가격
 
-    var url = 'http://crix-api-endpoint.upbit.com/v1/crix/candles/days/?code=CRIX.UPBIT.KRW-' + coin;
+    var url = `http://crix-api-endpoint.upbit.com/v1/crix/candles/days/?code=CRIX.UPBIT.KRW-${coin}`;
 
-    var upbit = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+    const upbit = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
 
     upbitPrice = upbit[0].tradePrice;
 
-    //빗썸 btc 가격
+    // 빗썸 btc 가격
 
-    var url = 'https://api.bithumb.com/public/transaction_history/' + coin + '_KRW';
+    var url = `https://api.bithumb.com/public/transaction_history/${coin}_KRW`;
 
-    var bith = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+    const bith = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
 
     bith_price = bith.data[0].price;
 
@@ -24,11 +24,11 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     var url = 'https://api.binance.com/api/v1/ticker/allPrices';
 
-    var binance = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+    const binance = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
 
-    var coin_name = coin + 'USDT';
+    const coin_name = `${coin}USDT`;
 
-    var i = 0;
+    let i = 0;
 
     while (1) {
       if (i > 1372) {
@@ -50,9 +50,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
       i++;
     }
 
-    //김프 계산
+    // 김프 계산
 
-    //업비트 김프
+    // 업비트 김프
 
     gimp_u = upbitPrice - change2KRW(price);
 
@@ -60,7 +60,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     gimp_u = gimp_u.toFixed(2);
 
-    //빗썸 김프
+    // 빗썸 김프
 
     gimp_b = bith_price - change2KRW(price);
 
@@ -68,44 +68,44 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     gimp_b = gimp_b.toFixed(2);
 
-    // 출력​
+    // 출력
 
     replier.reply(
-      '##김프 도우미## \n [BTC : ' +
-        divide(price) +
-        '$ ]' +
-        '\n업비트 ' +
-        gimp_u +
-        '% : ' +
-        divide(upbitPrice) +
-        '원' +
-        '\n빗썸 ' +
-        gimp_b +
-        '% : ' +
-        divide(bith_price) +
-        '원'
+      `##김프 도우미## \n [BTC : ${
+        divide(price)
+      }$ ]`
+        + `\n업비트 ${
+          gimp_u
+        }% : ${
+          divide(upbitPrice)
+        }원`
+        + `\n빗썸 ${
+          gimp_b
+        }% : ${
+          divide(bith_price)
+        }원`,
     );
   }
 }
 
-//환율
+// 환율
 
 function change2KRW(usd) {
-  var url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD';
+  const url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD';
 
-  var exchange = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+  const exchange = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
 
   basePrice = exchange[0].basePrice;
 
-  var result = usd * basePrice;
+  const result = usd * basePrice;
 
   return result;
 }
 
-//천자리 표기
+// 천자리 표기
 
 function divide(num) {
-  var parts = num.toString().split('.');
+  const parts = num.toString().split('.');
 
-  return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (parts[1] ? '.' + parts[1] : '');
+  return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (parts[1] ? `.${parts[1]}` : '');
 }

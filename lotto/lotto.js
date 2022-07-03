@@ -10,21 +10,21 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
     data = data.select('div.lot_num');
     data = data.select('li');
-    replier.reply(date + day + ' \n' + data.text() + ' +' + plusNum.text());
+    replier.reply(`${date + day} \n${data.text()} +${plusNum.text()}`);
   } else if (msg === '/로또추천') {
-    let lottos = [];
+    const lottos = [];
     for (let i = 0; i < 7; i++) {
-      let num = Math.floor(Math.random() * 45) + 1;
+      const num = Math.floor(Math.random() * 45) + 1;
       if (lottos.includes(num)) {
         i--;
       } else {
         lottos.push(num);
       }
     }
-    let bonusNum = lottos.pop();
-    replier.reply('추천번호 : ' + lottos.join(', ') + ' + ' + bonusNum);
+    const bonusNum = lottos.pop();
+    replier.reply(`추천번호 : ${lottos.join(', ')} + ${bonusNum}`);
   } else if (msg.startsWith('/내로또')) {
-    let numbers = msg.split(' ');
+    const numbers = msg.split(' ');
     numbers.shift();
     let data = org.jsoup.Jsoup.connect('https://m.search.naver.com/search.naver?query=로또').get();
     let plusNum = data.select('div.plus_num');
@@ -44,10 +44,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     }
     data.pop();
     let out_text = '';
-    out_text += '내 로또번호 \n' + numbers + '\n';
+    out_text += `내 로또번호 \n${numbers}\n`;
 
-    out_text += '이번주 당첨번호 \n' + data + ' +' + plusNum + '\n\n';
-    out_text += '번호가 ' + result + '개 일치합니다.(플러스번호 일수도 있습니다)';
+    out_text += `이번주 당첨번호 \n${data} +${plusNum}\n\n`;
+    out_text += `번호가 ${result}개 일치합니다.(플러스번호 일수도 있습니다)`;
 
     replier.reply(out_text);
   }
