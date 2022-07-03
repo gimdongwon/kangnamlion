@@ -1,4 +1,4 @@
-let dict_data = callData();
+let data = callData();
 
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
   const msgSplit = msg.split(' ');
@@ -6,16 +6,16 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
   const key = msgSplit[1];
   const value = msgSplit[2];
   if (cmd === '사전추가') {
-    dict_data = callData();
-    dict_data[key] = value;
+    data = callData();
+    data[key] = value;
 
-    FileStream.write('sdcard/msgbot/dict.json', JSON.stringify(dict_data));
+    FileStream.write('sdcard/msgbot/dict.json', JSON.stringify(data));
     replier.reply(`${key} 사전추가 완료`);
   } else if (cmd === '사전목록') {
-    const obj = Object.keys(dict_data);
+    const obj = Object.keys(data);
     let result = '';
     for (let i = 0; i < obj.length; i += 1) {
-      result += `${obj[i]} : ${dict_data[obj[i]]}`;
+      result += `${obj[i]} : ${data[obj[i]]}`;
       if (i !== obj.length - 1) {
         result += '\n';
       }

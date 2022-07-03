@@ -43,7 +43,7 @@ function Covid(country) {
       .get()
       .text(),
   );
-  for (i in data) data[i] = data[i].reverse();
+  for (const i in data) data[i] = data[i].reverse();
   return (
     `· 확진자: ${
       data.confirmed_acc[0]

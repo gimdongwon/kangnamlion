@@ -13,10 +13,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     replier.reply(`${date + day} \n${data.text()} +${plusNum.text()}`);
   } else if (msg === '/로또추천') {
     const lottos = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 7; i += 1) {
       const num = Math.floor(Math.random() * 45) + 1;
       if (lottos.includes(num)) {
-        i--;
+        i -= 1;
       } else {
         lottos.push(num);
       }
@@ -43,12 +43,12 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
     }
     data.pop();
-    let out_text = '';
-    out_text += `내 로또번호 \n${numbers}\n`;
+    let output = '';
+    output += `내 로또번호 \n${numbers}\n`;
 
-    out_text += `이번주 당첨번호 \n${data} +${plusNum}\n\n`;
-    out_text += `번호가 ${result}개 일치합니다.(플러스번호 일수도 있습니다)`;
+    output += `이번주 당첨번호 \n${data} +${plusNum}\n\n`;
+    output += `번호가 ${result}개 일치합니다.(플러스번호 일수도 있습니다)`;
 
-    replier.reply(out_text);
+    replier.reply(output);
   }
 }

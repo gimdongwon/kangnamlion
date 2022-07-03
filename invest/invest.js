@@ -9,9 +9,9 @@ Kakao.login('dongwon@likelion.org', 'ehddnjs89!'); // 카카오 계정 아이디
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
 
-  const str_split_Arr = msg.split(' ');
-  const market = str_split_Arr[0];
-  let target = str_split_Arr[1];
+  const arr = msg.split(' ');
+  const market = arr[0];
+  let target = arr[1];
   if (sender === '양용기') return;
   if (market == '주식') {
     try {

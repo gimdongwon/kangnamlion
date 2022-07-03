@@ -26,7 +26,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     const binance = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
 
-    const coin_name = `${coin}USDT`;
+    const symbol = `${coin}USDT`;
 
     let i = 0;
 
@@ -35,10 +35,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
         break;
       }
 
-      if (coin_name == binance[i].symbol) {
-        price = binance[i].price;
-
-        var price = Number(price);
+      if (symbol === binance[i].symbol) {
+        let price = Number(binance[i].price);
 
         if (price < 1000) {
           price = price.toFixed(4);
@@ -47,7 +45,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
         break;
       }
 
-      i++;
+      i += 1;
     }
 
     // 김프 계산

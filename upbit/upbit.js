@@ -3,14 +3,14 @@ const { KakaoLinkClient } = require('kakaolink');
 const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
 Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
 
-const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
+const dict = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   if (sender === '용키') return;
-  const str_split_Arr = msg.split(' ');
-  let splited_data = str_split_Arr[1];
-  if (Object.keys(dict_data).indexOf(splited_data) > -1) {
-    splited_data = dict_data[splited_data];
+  const arr = msg.split(' ');
+  let splited = arr[1];
+  if (Object.keys(dict).indexOf(splited) > -1) {
+    splited = dict[splited];
   }
   // /* 업비트 코인가격 */
   if (msg.startsWith('업 ')) {
@@ -18,49 +18,49 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       room = sender;
     }
     try {
-      let upbit_coin_symbol = '';
-      if (str_split_Arr.length != 1) {
-        // upbit_coin_symbol = splited_data;
-        const coin_symbol_krw = JSON.parse(
+      let symbol = '';
+      if (arr.length !== 1) {
+        // symbol = splited;
+        const krw = JSON.parse(
           org.jsoup.Jsoup.connect('https://api.upbit.com/v1/market/all').ignoreContentType(true).get().text(),
         );
         // let data = org.jsoup.Jsoup.connect('https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC').get();
-        for (const i in coin_symbol_krw) {
-          const keywordData = coin_symbol_krw[i];
+        for (const i in krw) {
+          const keywordData = krw[i];
           const keywordData_replaced = keywordData.korean_name.replace(/(<([^>]+)>)/gi, ' ');
-          if (keywordData_replaced == splited_data) {
-            upbit_coin_symbol = keywordData.market.replace(/(<([^>]+)>)/gi, ' ').split('-')[1];
+          if (keywordData_replaced === splited) {
+            symbol = keywordData.market.replace(/(<([^>]+)>)/gi, ' ').split('-')[1];
           }
         }
       }
-      upbit_coin_symbol = upbit_coin_symbol.toUpperCase();
-      const upbit_json = upbit_func(upbit_coin_symbol);
-      let output_text = '';
-      output_text += '[UPBIT API]\n';
-      output_text += `<${upbit_coin_symbol}/KRW>\n`;
-      output_text
-        += `${numberWithCommas(`현재가 ${upbit_json[0].trade_price}`)
+      symbol = symbol.toUpperCase();
+      const json = upbit(symbol);
+      let output = '';
+      output += '[UPBIT API]\n';
+      output += `<${symbol}/KRW>\n`;
+      output
+        += `${comma(`현재가 ${json[0].trade_price}`)
         } (${
-          (upbit_json[0].signed_change_rate * 100).toFixed(2)
+          (json[0].signed_change_rate * 100).toFixed(2)
         }%)\n\n`;
-      output_text += `24H 고가 : ${numberWithCommas(upbit_json[0].high_price)} KRW\n`;
-      output_text += `24H 저가 : ${numberWithCommas(upbit_json[0].low_price)} KRW\n`;
-      output_text += `24H 종가 : ${numberWithCommas(upbit_json[0].prev_closing_price)} KRW\n`;
-      output_text
-        += `24H 거래량 : ${numberWithCommas(upbit_json[0].acc_trade_volume_24h.toFixed(2))} ${upbit_coin_symbol}`;
+      output += `24H 고가 : ${comma(json[0].high_price)} KRW\n`;
+      output += `24H 저가 : ${comma(json[0].low_price)} KRW\n`;
+      output += `24H 종가 : ${comma(json[0].prev_closing_price)} KRW\n`;
+      output
+        += `24H 거래량 : ${comma(json[0].acc_trade_volume_24h.toFixed(2))} ${symbol}`;
 
       Kakao.sendLink(
         room,
         {
           template_id: 77428,
           template_args: {
-            upbit_coin_symbol,
-            now_price: numberWithCommas(upbit_json[0].trade_price),
-            percent: (upbit_json[0].signed_change_rate * 100).toFixed(2),
-            max_price: numberWithCommas(upbit_json[0].high_price),
-            min_price: numberWithCommas(upbit_json[0].low_price),
-            finish_price: numberWithCommas(upbit_json[0].prev_closing_price),
-            trade_volume: numberWithCommas(upbit_json[0].acc_trade_volume_24h.toFixed(2)),
+            symbol,
+            now_price: comma(json[0].trade_price),
+            percent: (json[0].signed_change_rate * 100).toFixed(2),
+            max_price: comma(json[0].high_price),
+            min_price: comma(json[0].low_price),
+            finish_price: comma(json[0].prev_closing_price),
+            trade_volume: comma(json[0].acc_trade_volume_24h.toFixed(2)),
           },
         },
         'custom',
@@ -73,7 +73,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         template_args: {}
       }, 'custom');
       */
-      //   replier.reply(output_text);
+      //   replier.reply(output);
 
       // replier.reply(d);
     } catch (error) {
@@ -83,13 +83,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 }
 /* 업비트 JSON 함수 */
 
-function upbit_func(coin_symbol) {
-  let upbit_url = 'https://api.upbit.com/v1/ticker?markets=KRW-';
-  upbit_url += coin_symbol;
-  return JSON.parse(org.jsoup.Jsoup.connect(upbit_url).ignoreContentType(true).get().text());
+function upbit(symbol) {
+  let url = 'https://api.upbit.com/v1/ticker?markets=KRW-';
+  url += symbol;
+  return JSON.parse(org.jsoup.Jsoup.connect(url).ignoreContentType(true).get().text());
 }
 /* 화폐단위 컴마출력 */
 
-function numberWithCommas(x) {
+function comma(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
