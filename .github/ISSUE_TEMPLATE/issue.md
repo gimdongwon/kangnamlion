@@ -7,10 +7,6 @@ assignees: ''
 
 ---
 
-### jira
-
-- DT-
-
 ### history
 
 - ?
