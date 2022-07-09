@@ -1,4 +1,4 @@
-# Kangnam Lion Kakaotalk bot
+# Kangnam Lion Kakaotalk Bot
 
 android 폴더에 있는 source code를 scrcpy를 사용해서 복붙으로 개발중.
 
