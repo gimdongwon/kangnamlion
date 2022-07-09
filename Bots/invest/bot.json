@@ -1,5 +1,5 @@
 {
-  "main": "index.js",
+  "main": "covid19.js",
   "option": {
     "apiLevel": 1,
     "useUnifiedParams": false,
