@@ -3,6 +3,7 @@
   "option": {
     "apiLevel": 1,
     "useUnifiedParams": false,
-    "useBabel": true
+    "useBabel": false,
+    "scriptPower": true
   }
 }
