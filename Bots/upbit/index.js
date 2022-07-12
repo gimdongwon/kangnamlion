@@ -1,17 +1,18 @@
+const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
 const { KakaoLinkClient } = require('kakaolink');
-
-const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
-Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
-
-const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
+const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
+Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   if (sender === '용키') return;
+  const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
+
   let str_split_Arr = msg.split(' ');
   let splited_data = str_split_Arr[1];
   if (Object.keys(dict_data).indexOf(splited_data) > -1) {
     splited_data = dict_data[splited_data];
   }
+
   // /* 업비트 코인가격 */
   if (msg.startsWith('업 ')) {
     if (!isGroupChat) {

@@ -1,7 +1,7 @@
+const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
 const { KakaoLinkClient } = require('kakaolink');
-
-const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
-Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
+const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
+Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
 
 function response(room, msg, sender, isGroupChat, replier) {
   if (sender === '용키') return;
@@ -42,21 +42,6 @@ function response(room, msg, sender, isGroupChat, replier) {
             humidity: resultHM,
           },
         });
-
-        // replier.reply(
-        //   '지금 현재 ' +
-        //     region +
-        //     '의 날씨는 "' +
-        //     resultDC +
-        //     '"입니다. 온도는 ' +
-        //     resultTM +
-        //     '°C 입니다.\n\n강수확률: ' +
-        //     resultPP +
-        //     '\n풍속: ' +
-        //     resultWS +
-        //     '\n습도: ' +
-        //     resultHM
-        // );
       } catch (e) {
         replier.reply(e, '불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
 

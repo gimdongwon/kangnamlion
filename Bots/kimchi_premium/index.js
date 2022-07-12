@@ -1,14 +1,12 @@
-importClass(org.jsoup.Jsoup);
-
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName, threadId) {
-  if (msg.startsWith('!김프')) {
+  if (msg === '김프') {
     var coin = 'BTC';
 
     //업비트 btc 가격
 
     var url = 'http://crix-api-endpoint.upbit.com/v1/crix/candles/days/?code=CRIX.UPBIT.KRW-' + coin;
 
-    var upbit = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+    var upbit = JSON.parse(org.jsoup.Jsoup.connect(url).ignoreContentType(true).get().text());
 
     upbitPrice = upbit[0].tradePrice;
 
@@ -16,7 +14,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     var url = 'https://api.bithumb.com/public/transaction_history/' + coin + '_KRW';
 
-    var bith = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+    var bith = JSON.parse(org.jsoup.Jsoup.connect(url).ignoreContentType(true).get().text());
 
     bith_price = bith.data[0].price;
 
@@ -24,7 +22,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     var url = 'https://api.binance.com/api/v1/ticker/allPrices';
 
-    var binance = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+    var binance = JSON.parse(org.jsoup.Jsoup.connect(url).ignoreContentType(true).get().text());
 
     var coin_name = coin + 'USDT';
 
@@ -68,10 +66,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 
     gimp_b = gimp_b.toFixed(2);
 
-    // 출력​
+    // 출력
 
     replier.reply(
-      '##김프 도우미## \n [BTC : ' +
+      '바이낸스\n[BTC : ' +
         divide(price) +
         '$ ]' +
         '\n업비트 ' +
@@ -93,7 +91,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName,
 function change2KRW(usd) {
   var url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD';
 
-  var exchange = JSON.parse(Jsoup.connect(url).ignoreContentType(true).get().text());
+  var exchange = JSON.parse(org.jsoup.Jsoup.connect(url).ignoreContentType(true).get().text());
 
   basePrice = exchange[0].basePrice;
 

@@ -1,14 +1,3 @@
-const scriptName = 'covid';
-/**
- * (string) room
- * (string) sender
- * (boolean) isGroupChat
- * (void) replier.reply(message)
- * (boolean) replier.reply(room, message, hideErrorToast = false) // 전송 성공시 true, 실패시 false 반환
- * (string) imageDB.getProfileBase64()
- * (string) packageName
- */
-
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
   if (msg.startsWith('코로나')) {
     if (msg == '코로나') return replier.reply('[한국]\n' + Covid(country['한국']));
@@ -25,13 +14,6 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
     }
   }
 }
-
-/*
- * © 2021 kaan, All rights reserved.
- * 게시글에 ❤와 댓글은 큰 힘이 됩니다🔥
- * https://blog.naver.com/junyoungbae02/222382072147
- * 알림구조 변경 대응소스 출처 : https://cafe.naver.com/nameyee/38636
- */
 
 function Covid(country) {
   /*

@@ -1,9 +1,11 @@
+const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
+const { KakaoLinkClient } = require('kakaolink');
+const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
+Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
+
 // const { KakaoLinkClient: KakaoLinkClient } = require('kakaolink');
-// const Kakao = new KakaoLinkClient(KAKAO_CLIKENT_KEY, 'https://developers.kakao.com');
-// Kakao.login(KAKAO_ID, KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
-const { KakaoLinkClient: KakaoLinkClient } = require('kakaolink');
-const Kakao = new KakaoLinkClient('806c389b4ca349f0748523283881e63d', 'https://developers.kakao.com');
-Kakao.login('dongwon@likelion.org', 'ehddnjs89!'); // 카카오 계정 아이디와 비밀번호
+// const Kakao = new KakaoLinkClient('806c389b4ca349f0748523283881e63d', 'https://developers.kakao.com');
+// Kakao.login('dongwon@likelion.org', 'ehddnjs89!'); // 카카오 계정 아이디와 비밀번호
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));

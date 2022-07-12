@@ -1,6 +1,7 @@
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
-  if (msg === '/로또') {
-    let data = org.jsoup.Jsoup.connect('https://m.search.naver.com/search.naver?query=로또').get();
+  if (sender==="용키") return;
+  if (msg === '로또') {
+    let data = org.jsoup.Jsoup.connect('https://m.search.naver.com/search.naver?query=로또번호').get();
     let day = data.select('span.select_txt');
     day = day.text();
     let date = data.select('div.lot_date');
@@ -11,7 +12,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     data = data.select('div.lot_num');
     data = data.select('li');
     replier.reply(date + day + ' \n' + data.text() + ' +' + plusNum.text());
-  } else if (msg === '/로또추천') {
+  } else if (msg === '로또추천') {
     let lottos = [];
     for (let i = 0; i < 7; i++) {
       let num = Math.floor(Math.random() * 45) + 1;
@@ -23,7 +24,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     }
     let bonusNum = lottos.pop();
     replier.reply('추천번호 : ' + lottos.join(', ') + ' + ' + bonusNum);
-  } else if (msg.startsWith('/내로또')) {
+  } else if (msg.startsWith('내로또')) {
     let numbers = msg.split(' ');
     numbers.shift();
     let data = org.jsoup.Jsoup.connect('https://m.search.naver.com/search.naver?query=로또').get();
