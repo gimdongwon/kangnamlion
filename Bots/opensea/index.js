@@ -19,6 +19,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         result.collection.stats['average_price'] && result.collection.stats['average_price'].toFixed(4);
       const oneDayVolume = result.collection.stats['one_day_volume'].toFixed(4);
       const totalVolume = result.collection.stats['total_volume'].toFixed(4);
+      const ethJson = getETHprice();
+      const krwPrice = numberWithCommas(ethJson[0].trade_price * floorPrice);
       Kakao.sendLink(
         room,
         {
@@ -30,6 +32,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
             averagePrice: averagePrice,
             oneDayVolume: oneDayVolume,
             totalVolume: totalVolume,
+            ethPrice: ethJson[0].trade_price,
+            krwPrice: krwPrice,
           },
         },
         'custom'
@@ -44,4 +48,14 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 function opensea_func(opensea_symbol) {
   let opensea_url = 'https://api.opensea.io/api/v1/collection/' + opensea_symbol;
   return JSON.parse(org.jsoup.Jsoup.connect(opensea_url).ignoreContentType(true).get().text());
+}
+
+function getETHprice() {
+  return JSON.parse(
+    org.jsoup.Jsoup.connect('https://api.upbit.com/v1/ticker?markets=KRW-ETH').ignoreContentType(true).get().text()
+  );
+}
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
