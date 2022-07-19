@@ -14,13 +14,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
       const result = opensea_func(target);
       const imgUrl = result.collection.banner_image_url;
-      const floorPrice = result.collection.stats['floor_price'] && result.collection.stats['floor_price'].toFixed(4);
+      const floorPrice = result.collection.stats['floor_price'] && result.collection.stats['floor_price'].toFixed(2);
       const averagePrice =
-        result.collection.stats['average_price'] && result.collection.stats['average_price'].toFixed(4);
-      const oneDayVolume = result.collection.stats['one_day_volume'].toFixed(4);
-      const totalVolume = result.collection.stats['total_volume'].toFixed(4);
+        result.collection.stats['average_price'] && result.collection.stats['average_price'].toFixed(2);
+      const oneDayVolume = result.collection.stats['one_day_volume'].toFixed(2);
+      const totalVolume = result.collection.stats['total_volume'].toFixed(2);
       const ethJson = getETHprice();
-      const krwPrice = numberWithCommas(ethJson[0].trade_price * floorPrice);
+      const krwPrice = numberWithCommas(ethJson[0].trade_price * floorPrice).split('.')[0];
       Kakao.sendLink(
         room,
         {
@@ -32,7 +32,6 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
             averagePrice: averagePrice,
             oneDayVolume: oneDayVolume,
             totalVolume: totalVolume,
-            ethPrice: ethJson[0].trade_price,
             krwPrice: krwPrice,
           },
         },
