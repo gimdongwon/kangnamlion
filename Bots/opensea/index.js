@@ -21,6 +21,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       const totalVolume = result.collection.stats['total_volume'].toFixed(2);
       const ethJson = getETHprice();
       const krwPrice = numberWithCommas(ethJson[0].trade_price * floorPrice).split('.')[0];
+      const klay = callCoinInfo();
+      const klayPrice = klay.data['closing_price'];
+      const klayFloorPrice = numberWithCommas((ethJson[0].trade_price * floorPrice) / klayPrice).split('.')[0];
       Kakao.sendLink(
         room,
         {
@@ -33,6 +36,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
             oneDayVolume: oneDayVolume,
             totalVolume: totalVolume,
             krwPrice: krwPrice,
+            klayFloorPrice: klayFloorPrice,
           },
         },
         'custom'
@@ -57,4 +61,10 @@ function getETHprice() {
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function callCoinInfo() {
+  return JSON.parse(
+    org.jsoup.Jsoup.connect('https://api.bithumb.com/public/ticker/KLAY_KRW').ignoreContentType(true).get().text()
+  );
 }
