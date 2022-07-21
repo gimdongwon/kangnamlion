@@ -5,12 +5,13 @@ Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이�
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
-  const [command, ticker] = msg.split(' ');
+  let [command, ticker] = msg.split(' ');
   if (ticker && command === '빗') {
     try {
       if (Object.keys(dict_data).indexOf(ticker) > -1) {
         ticker = dict_data[ticker];
       }
+
       const coinList = callCoinSymbol();
       if (ticker in coinList) {
         let coinInfo = callCoinInfo(coinList[ticker]);
@@ -34,16 +35,16 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
               currentPrice: numberWithCommas(currentPrice),
               accTrade: numberWithCommas(accTrade),
               openingPrice: numberWithCommas(openingPrice),
-              difference: currentPrice - openingPrice,
+              difference: (currentPrice - openingPrice).toFixed(2),
             },
           },
           'custom'
         );
       } else {
-        replier.reply('해당 코인이 존재하지 않습니다');
+        replier.reply('해당 코인이 존재하지 않습니다 다른 코인을 조회해주세요.');
       }
     } catch (error) {
-      replier.reply('error : ' + error);
+      replier.reply('api error');
     }
   }
 }
