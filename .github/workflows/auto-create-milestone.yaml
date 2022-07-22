@@ -2,7 +2,7 @@ name: auto-create-milestone
 
 on:
   schedule:
-    - cron: "* * * * *"
+    - cron: '* * * * *'
 
 jobs:
   generate:
@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: run
-        uses: seunggabi/auto-create-milestone@v1.1
+        uses: seunggabi/auto-create-milestone@v1.1.0
         id: run
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
