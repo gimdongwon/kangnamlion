@@ -2,7 +2,7 @@ name: auto-create-milestone
 
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   generate:
