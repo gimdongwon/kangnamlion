@@ -1,3 +1,4 @@
+const full = '\u200b'.repeat(1000);
 let dict_data = callData();
 
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
@@ -20,7 +21,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         result += '\n';
       }
     }
-    replier.reply(result);
+    replier.reply('사전목록\n' + full + result);
   } else if (cmd === '사전삭제') {
     dict_data = callData();
     if (delete dict_data[key]) {
