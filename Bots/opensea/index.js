@@ -42,9 +42,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         'custom'
       );
       // replier.reply(output_text);
-    } catch (error) {
-      replier.reply('호출 실패￦n' + error);
-    }
+    } catch (error) {}
   }
 }
 

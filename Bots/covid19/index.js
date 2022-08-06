@@ -2,15 +2,17 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
   if (msg.startsWith('코로나')) {
     if (msg == '코로나') return replier.reply('[한국]\n' + Covid(country['한국']));
     else {
-      if (country[msg.substr(4)] == undefined)
-        return replier.reply(
-          msg.substr(4) +
-            '정보를 불러올 수 없는 국가입니다!' +
-            '\u200b'.repeat(500) +
-            '\n\n국가이름:\n\n' +
-            Object.keys(country).sort().join('\n\n')
-        );
-      return replier.reply('[' + msg.substr(4) + ']\n' + Covid(country[msg.substr(4)]));
+      if (country[msg.substr(4)] == undefined) {
+        // return replier.reply(
+        //   msg.substr(4) +
+        //     '정보를 불러올 수 없는 국가입니다!' +
+        //     '\u200b'.repeat(500) +
+        //     '\n\n국가이름:\n\n' +
+        //     Object.keys(country).sort().join('\n\n')
+        // );
+      } else {
+        return replier.reply('[' + msg.substr(4) + ']\n' + Covid(country[msg.substr(4)]));
+      }
     }
   }
 }

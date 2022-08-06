@@ -7,11 +7,13 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
     key = msgSplit[1],
     value = msgSplit[2];
   if (cmd === '사전추가') {
-    dict_data = callData();
-    dict_data[key] = value;
+    if (key.length && value.length) {
+      dict_data = callData();
+      dict_data[key] = value;
 
-    FileStream.write('sdcard/msgbot/dict.json', JSON.stringify(dict_data));
-    replier.reply(key + ' 사전추가 완료');
+      FileStream.write('sdcard/msgbot/dict.json', JSON.stringify(dict_data));
+      replier.reply(key + ' 사전추가 완료');
+    }
   } else if (cmd === '사전목록') {
     const obj = Object.keys(dict_data);
     let result = '';
