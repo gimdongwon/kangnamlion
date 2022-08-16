@@ -1,14 +1,18 @@
-// .eslintrc.json
 {
   "env": {
     "browser": true,
     "node": true, // 에러 방지 위해 browswer, node 둘다 true
     "es2020": true //2020-12-03 기준 2021은 eslint가 안되는 오류가 있다
   },
-  "extends": ["eslint:recommended", "airbnb-base"], //airbnb-base 포맷 사용
+  "extends": ["eslint:recommended", "airbnb-base"],
   "parserOptions": {
-    "ecmaVersion": 11, //es2020
+    "ecmaVersion": 11,
     "sourceType": "module"
   },
-  "rules": {}
+  "rules": {
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "import/no-unresolved": "off",
+    "object-curly-spacing": "off"
+  }
 }
