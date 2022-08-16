@@ -2,23 +2,17 @@ name: auto-create-milestone
 
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: run
-        uses: seunggabi/auto-create-milestone@v1.1.0
-        id: run
+      - uses: seunggabi/auto-create-milestone@v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: d-
           days: Friday
           count: 4
           format: YYYY.MM.DD
-
-      - name: result
-        run: echo ${{ steps.run.outputs.milestones }}
