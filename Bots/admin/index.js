@@ -1,3 +1,4 @@
+const full = '\u200b'.repeat(1000);
 const scriptName = 'admin';
 
 const DFLT_ADMIN = [{ name: '김동원' }, { name: '김승갑' }];
@@ -70,8 +71,8 @@ function isAdmin(name) {
 }
 
 function help() {
-  let help_msg = '[관리자 도움말]';
-  help_msg = help_msg.concat('\n*도움말');
+  let help_msg = '[관리자 도움말]\n';
+  help_msg = help_msg.concat(full + '\n*도움말');
   help_msg = help_msg.concat('\n*디바이스 상태');
   help_msg = help_msg.concat('\n');
   help_msg = help_msg.concat('\n*방');
@@ -143,9 +144,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
   // 스크립트 상태 확인
   if (msg == '*상태') replier.reply(botStatus());
 
-  // 스크립트 재컴파일
-  if (msg.indexOf('*재컴파일') == 0) {
-    let contents = msg.replace('*재컴파일', '').trim();
+  function reCompile(message) {
+    let contents = message.replace('*재컴파일', '').trim();
     if (isNull(contents)) {
       Api.reload();
       replier.reply('전체 스크립트가 재컴파일되었습니다.');
@@ -160,9 +160,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
     }
   }
 
-  // 스크립트 구동
-  if (msg.indexOf('*구동') == 0) {
-    let contents = msg.replace('*구동', '').trim();
+  function restart(message) {
+    let contents = message.replace('*구동', '').trim();
     if (isNull(contents)) {
       Api.on();
       replier.reply('전체 스크립트가 구동되었습니다.');
@@ -175,6 +174,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }
       }
     }
+  }
+  // 스크립트 재컴파일
+  if (msg.indexOf('*재컴파일') == 0) {
+    reCompile(msg);
+  }
+
+  // 스크립트 구동
+  if (msg.indexOf('*구동') == 0) {
+    restart(msg);
   }
 
   // 스크립트 중지

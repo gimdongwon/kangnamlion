@@ -25,7 +25,7 @@ function response(room, msg, sender, isGroupChat, replier) {
         let resultHM = url.select('#wob_hm').text(); //습도
 
         if (resultDC == '') {
-          replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
+          // replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
 
           return;
         }

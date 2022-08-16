@@ -66,19 +66,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         },
         'custom'
       );
-      /*
-      if(!isGroupChat){room=sender;}
-      room = room.replace(/,/g,", ");
-      Kakao.sendLink(room,{
-        template_id: 75135,
-        template_args: {}
-      }, 'custom');
-      */
-      //   replier.reply(output_text);
-
-      //replier.reply(d);
     } catch (error) {
-      replier.reply('해당 코인이 존재하지 않습니다\n' + error);
+      // replier.reply('해당 코인이 존재하지 않습니다. 정확한 이름을 입력해주세요.');
     }
   }
 }

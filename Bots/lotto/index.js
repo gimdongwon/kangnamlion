@@ -1,17 +1,15 @@
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
-  if (sender==="용키") return;
+  if (sender === '용키') return;
   if (msg === '로또') {
-    let data = org.jsoup.Jsoup.connect('https://m.search.naver.com/search.naver?query=로또번호').get();
-    let day = data.select('span.select_txt');
-    day = day.text();
-    let date = data.select('div.lot_date');
-    date = date.select('dd').text().replace('1년', '');
-    let plusNum = data.select('div.plus_num');
-    plusNum = plusNum.select('span');
+    let data = org.jsoup.Jsoup.connect(
+      'https://search.naver.com/search.naver?ie=UTF-8&query=%EB%A1%9C%EB%98%90%EB%B2%88%ED%98%B8&sm=chr_hty'
+    ).get();
+    let date = data.select('div.select_tab').text();
+    date = date.split(' 이전 회차 다음 회차')[0];
+    let numbers = data.select('div.winning_number').text();
+    let plusNum = data.select('div.bonus_number').text();
 
-    data = data.select('div.lot_num');
-    data = data.select('li');
-    replier.reply(date + day + ' \n' + data.text() + ' +' + plusNum.text());
+    replier.reply(date + ' \n\n\n' + numbers + ' +' + plusNum);
   } else if (msg === '로또추천') {
     let lottos = [];
     for (let i = 0; i < 7; i++) {
@@ -23,7 +21,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
     }
     let bonusNum = lottos.pop();
-    replier.reply('추천번호 : ' + lottos.join(', ') + ' + ' + bonusNum);
+    replier.reply('추천번호 : ' + lottos.join(', ') + '\n보너스번호 + ' + bonusNum);
   } else if (msg.startsWith('내로또')) {
     let numbers = msg.split(' ');
     numbers.shift();
