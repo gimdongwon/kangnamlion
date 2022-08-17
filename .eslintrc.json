@@ -13,6 +13,7 @@
     "no-undef": "off",
     "no-unused-vars": "off",
     "import/no-unresolved": "off",
-    "object-curly-spacing": "off"
+    "object-curly-spacing": "off",
+    "no-restricted-syntax": "off"
   }
 }
