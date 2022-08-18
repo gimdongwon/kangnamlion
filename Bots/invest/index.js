@@ -1,21 +1,22 @@
 const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
 const { KakaoLinkClient } = require('kakaolink');
-const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
-Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
+
+const Kakao = new KakaoLinkClient(env.KAKAO_CLIENT_KEY, 'https://developers.kakao.com');
+Kakao.login(env.KAKAO_ID, env.KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
 
   const str_split_Arr = msg.split(' ');
-  let market = str_split_Arr[0],
-    target = str_split_Arr[1];
+  const market = str_split_Arr[0];
+  let target = str_split_Arr[1];
   if (sender === '양용기') return;
   if (market == '주식') {
     try {
       if (Object.keys(dict_data).indexOf(target) > -1) {
         target = dict_data[target];
       }
-      let data = org.jsoup.Jsoup.connect('https://www.google.com/search?q=주식%20' + target.replace(/ /g, '%20')).get();
+      let data = org.jsoup.Jsoup.connect(`https://www.google.com/search?q=주식%20${target.replace(/ /g, '%20')}`).get();
       const dataLength = data.select('g-card-section.N9cLBc');
       // replier.reply('점검중');
       // replier.reply(dataLength.length);
@@ -38,7 +39,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
         let priorPercent = data.select('span[jsname=mHOGHd]').text();
 
-        data = org.jsoup.Jsoup.connect('https://www.google.com/search?q=주식%20' + target.replace(/ /g, '%20')).get();
+        data = org.jsoup.Jsoup.connect(`https://www.google.com/search?q=주식%20${target.replace(/ /g, '%20')}`).get();
 
         const maxPrice = data.select('div[data-attrid="최고"]').text();
         const minPrice = data.select('div[data-attrid="최저"]').text();
@@ -71,27 +72,27 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
           {
             template_id: 77842,
             template_args: {
-              title: title,
-              currentPrice: currentPrice,
-              currency: currency,
-              profitPrice: profitPrice,
-              percent: percent,
-              priorPrice: priorPrice,
-              priorPercent: priorPercent,
-              maxPrice: maxPrice,
-              minPrice: minPrice,
-              endPrice: endPrice,
+              title,
+              currentPrice,
+              currency,
+              profitPrice,
+              percent,
+              priorPrice,
+              priorPercent,
+              maxPrice,
+              minPrice,
+              endPrice,
               // imageUrl: imageUrl,
               // dataLength: dataLength,
             },
           },
-          'custom'
+          'custom',
         );
       } else {
         // replier.reply('네이버 ' + dataLength.text());
-        let newData = org.jsoup.Jsoup.connect(
-          'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=주식%20' +
-            target.replace(/ /g, '%20')
+        const newData = org.jsoup.Jsoup.connect(
+          `https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=주식%20${
+            target.replace(/ /g, '%20')}`,
         ).get();
 
         const title_N = newData.select('span[class=stk_nm]').text();
@@ -117,7 +118,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
               minPrice: minPrice_N,
             },
           },
-          'custom'
+          'custom',
         );
       }
     } catch (e) {}

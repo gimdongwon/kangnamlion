@@ -1,7 +1,8 @@
 const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
 const { KakaoLinkClient } = require('kakaolink');
-const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
-Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
+
+const Kakao = new KakaoLinkClient(env.KAKAO_CLIENT_KEY, 'https://developers.kakao.com');
+Kakao.login(env.KAKAO_ID, env.KAKAO_PASSWORD); // 카카오 계정 아이디와 비밀번호
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
@@ -16,11 +17,11 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (ticker in coinList) {
         let coinInfo = callCoinInfo(coinList[ticker]);
         coinInfo = coinInfo.data;
-        const minPrice = coinInfo['min_price'],
-          maxPrice = coinInfo['max_price'],
-          currentPrice = coinInfo['closing_price'],
-          accTrade = (coinInfo['acc_trade_value_24H'] / 100000000).toFixed(2),
-          openingPrice = coinInfo['opening_price'];
+        const minPrice = coinInfo.min_price;
+        const maxPrice = coinInfo.max_price;
+        const currentPrice = coinInfo.closing_price;
+        const accTrade = (coinInfo.acc_trade_value_24H / 100000000).toFixed(2);
+        const openingPrice = coinInfo.opening_price;
         const priceFluctuations = (((currentPrice - openingPrice) / openingPrice) * 100).toFixed(2);
 
         Kakao.sendLink(
@@ -28,17 +29,17 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
           {
             template_id: 79951,
             template_args: {
-              ticker: ticker,
+              ticker,
               minPrice: numberWithCommas(minPrice),
               maxPrice: numberWithCommas(maxPrice),
-              priceFluctuations: priceFluctuations,
+              priceFluctuations,
               currentPrice: numberWithCommas(currentPrice),
               accTrade: numberWithCommas(accTrade),
               openingPrice: numberWithCommas(openingPrice),
               difference: (currentPrice - openingPrice).toFixed(2),
             },
           },
-          'custom'
+          'custom',
         );
       } else {
         replier.reply('해당 코인이 존재하지 않습니다 다른 코인을 조회해주세요.');
@@ -54,11 +55,11 @@ function numberWithCommas(x) {
 }
 
 function callCoinSymbol() {
-  let result = {};
+  const result = {};
   const bithumbUrl = 'https://gw.bithumb.com/exchange/v1/comn/intro';
   const data = JSON.parse(org.jsoup.Jsoup.connect(bithumbUrl).ignoreContentType(true).get().text());
 
-  for (let item of data && data.data && data.data.coinList) {
+  for (const item of data && data.data && data.data.coinList) {
     result[item.coinName] = item.coinSymbol;
   }
   return result;
@@ -66,9 +67,9 @@ function callCoinSymbol() {
 
 function callCoinInfo(ticker) {
   return JSON.parse(
-    org.jsoup.Jsoup.connect('https://api.bithumb.com/public/ticker/' + ticker + '_KRW')
+    org.jsoup.Jsoup.connect(`https://api.bithumb.com/public/ticker/${ticker}_KRW`)
       .ignoreContentType(true)
       .get()
-      .text()
+      .text(),
   );
 }
