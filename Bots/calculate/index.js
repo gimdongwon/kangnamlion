@@ -8,18 +8,31 @@ const dictUnit = {
   억: 100000000,
 };
 
+const currencys = ['달러', '달라', '유로', '엔', '위안', '파운드'];
+
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
   let [command, volume, ticker] = msg.split(' ');
-  if ((ticker && command === '계산') || command === '계싼') {
+  if (volume && ticker && (command === '계산' || command === '계싼')) {
     if (Object.keys(dict_data).indexOf(ticker) > -1) {
       ticker = dict_data[ticker];
     }
     if (korean.test(volume)) {
       const valueKorea = volume.replace(/[0-9]/g, '');
       volume = volume.replace(/[^0-9]/g, '') * dictUnit[valueKorea];
+    }
+    if (currencys.includes(ticker)) {
+      const url = 'https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=' + ticker;
+      const dollorData = org.jsoup.Jsoup.connect(url).get();
+      let money = dollorData.select('div.inner_price > em.txt_num').text();
+      money = money.replace(',', '');
+      if (ticker === '엔') {
+        money *= 0.01;
+      }
+      replier.reply('= ' + numberWithCommas(money * volume) + ' 원');
+      return;
     }
     const coinList = callCoinSymbol();
 
