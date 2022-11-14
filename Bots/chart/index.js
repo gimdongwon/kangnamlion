@@ -14,13 +14,31 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     ticker = checkTicker(ticker);
     const url = 'https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=' + ticker + '시세' + day;
     const data = org.jsoup.Jsoup.connect(url).get();
-    const image = changeUrl(data.select('.img_graph').attr('src'), day);
-    const price = data.select('.currency_value').text();
-    const ratio = data.select('.rate_value').text();
-    const highPrice = data.select('dd.stock_up').text();
-    const lowPrice = data.select('dd.stock_down').text();
-    const tradingVolumn = data.select('.list_stock').text().split('거래대금')[2];
+    let image = changeUrl(data.select('.img_graph').attr('src'), day);
+    let price, ratio, highPrice, lowPrice, tradingVolumn, currency;
+    if (image) {
+      price = data.select('.currency_value').text();
+      ratio = data.select('.rate_value').text();
+      highPrice = data.select('dd.stock_up').text();
+      lowPrice = data.select('dd.stock_down').text();
+      tradingVolumn = data.select('.list_stock').text().split('거래대금')[2];
+    } else {
+      image = changeUrl(data.select('div.img_stock > a > img.thumb_img').attr('src'), day);
+      if (!image) {
+        return;
+      }
+      price = data.select('div.info_current > span.num_stock').text();
+      ratio = data.select('div.info_current > span.num_rate').text();
+      ratio = ratio.includes('하락') ? ratio.replace('하락', '-') : ratio.replace('상승', '+');
+      ratio = ratio.replace('보합', '');
+      currency = data.select('span.txt_currency').text();
 
+      const temp = data.select('dl.dl_comm > dd.cont').text();
+      highPrice = temp.split(' ')[1];
+      lowPrice = temp.split(' ')[2];
+      tradingVolumn = temp.split(' ')[5];
+    }
+    if (!currency) currency = '원';
     Kakao.sendLink(room, {
       template_id: 85798,
       template_args: {
@@ -32,6 +50,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         highPrice: highPrice,
         lowPrice: lowPrice,
         tradingVolumn: tradingVolumn,
+        currency: currency,
       },
     });
   }
