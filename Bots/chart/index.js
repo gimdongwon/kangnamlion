@@ -6,9 +6,10 @@ Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이�
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   let [command, ticker, day] = msg.split(' ');
   if (ticker && command === '차트') {
-    replier.reply('개발중...');
     if (day === undefined) {
       day = '1일';
+    } else if (!['1일', '1주', '1개월', '3개월', '1년'].includes(day)) {
+      return;
     }
     ticker = checkTicker(ticker);
     const url = 'https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=' + ticker + '시세' + day;
@@ -19,7 +20,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     const highPrice = data.select('dd.stock_up').text();
     const lowPrice = data.select('dd.stock_down').text();
     const tradingVolumn = data.select('.list_stock').text().split('거래대금')[2];
-    replier.reply(image);
+
     Kakao.sendLink(room, {
       template_id: 85798,
       template_args: {
