@@ -24,6 +24,9 @@ function response(room, msg, sender, isGroupChat, replier) {
 
         let resultHM = url.select('#wob_hm').text(); //습도
 
+        let highTM = url.select('div.gNCp2e > span.wob_t').text().split(' ')[0];
+        let lowTM = url.select('div.ZXCv8e > span.wob_t').text().split(' ')[0];
+
         if (resultDC == '') {
           // replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
 
@@ -40,7 +43,24 @@ function response(room, msg, sender, isGroupChat, replier) {
             temperature: resultTM,
             wind: resultWS,
             humidity: resultHM,
+            highTM: highTM,
+            lowTM: lowTM,
           },
+        }).then((res) => {
+          if (res.status === 400) {
+            let result = '';
+            result += region + '의 날씨 🌡\n\n';
+            result += '상태 : ' + resultDC + '\n\n';
+            result += '온도 : ' + resultTM + '도\n';
+            result += '최고온도 : ' + highTM + '도\n';
+            result += '최저온도 : ' + lowTM + '도\n';
+            result += '강수확률 : ' + resultPP + '\n';
+            result += '풍속 : ' + resultWS + '\n';
+            result += '습도 : ' + resultHM + '\n\n';
+            result += '좋은 날씨로 좋은 하루보내세요 🦁 🌈☀️❄️💧';
+
+            replier.reply(result);
+          }
         });
       } catch (e) {
         replier.reply(e, '불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');

@@ -5,6 +5,7 @@ Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이�
 
 function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
   let [command, ticker, day] = msg.split(' ');
+
   if (ticker && command === '차트') {
     if (day === undefined) {
       day = '1일';
@@ -39,20 +40,29 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       tradingVolumn = temp.split(' ')[5];
     }
     if (!currency) currency = '원';
-    Kakao.sendLink(room, {
-      template_id: 85798,
-      template_args: {
-        image: image,
-        ticker: ticker,
-        day: day,
-        price: price,
-        ratio: ratio,
-        highPrice: highPrice,
-        lowPrice: lowPrice,
-        tradingVolumn: tradingVolumn,
-        currency: currency,
-      },
-    });
+    if (price.includes('원')) price = price.replace('원', '');
+    try {
+      Kakao.sendLink(room, {
+        template_id: 85798,
+        template_args: {
+          image: image,
+          ticker: ticker,
+          day: day,
+          price: price,
+          ratio: ratio,
+          highPrice: highPrice,
+          lowPrice: lowPrice,
+          tradingVolumn: tradingVolumn,
+          currency: currency,
+        },
+      }).then((res) => {
+        if (res.status === 400) {
+          replier.reply('카링 호출량을 초과하였습니다. 다른 명령어를 사용해주세요 🙏');
+        }
+      });
+    } catch (error) {
+      replier.reply('차트 호출 실패. 다시 시도해주세요 😱');
+    }
   }
 }
 

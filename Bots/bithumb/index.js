@@ -11,7 +11,6 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (Object.keys(dict_data).indexOf(ticker) > -1) {
         ticker = dict_data[ticker];
       }
-
       const coinList = callCoinSymbol();
       if (ticker in coinList) {
         let coinInfo = callCoinInfo(coinList[ticker]);
@@ -20,28 +19,44 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
           maxPrice = coinInfo['max_price'],
           currentPrice = coinInfo['closing_price'],
           accTrade = (coinInfo['acc_trade_value_24H'] / 100000000).toFixed(2),
-          openingPrice = coinInfo['opening_price'];
+          openingPrice = coinInfo['opening_price'],
+          maxPercent = (((openingPrice - coinInfo['max_price']) / openingPrice) * 100 * -1).toFixed(2),
+          minPercent = (((openingPrice - coinInfo['min_price']) / openingPrice) * 100 * -1).toFixed(2);
         const priceFluctuations = (((currentPrice - openingPrice) / openingPrice) * 100).toFixed(2);
-
+        const template_args = {
+          ticker: ticker,
+          minPrice: numberWithCommas(minPrice),
+          maxPrice: numberWithCommas(maxPrice),
+          maxPercent: maxPercent,
+          minPercent: minPercent,
+          priceFluctuations: priceFluctuations,
+          currentPrice: numberWithCommas(currentPrice),
+          accTrade: numberWithCommas(accTrade),
+          openingPrice: numberWithCommas(openingPrice),
+          difference: (currentPrice - openingPrice).toFixed(2),
+        };
         Kakao.sendLink(
           room,
           {
+            link_ver: '4.0',
             template_id: 79951,
-            template_args: {
-              ticker: ticker,
-              minPrice: numberWithCommas(minPrice),
-              maxPrice: numberWithCommas(maxPrice),
-              priceFluctuations: priceFluctuations,
-              currentPrice: numberWithCommas(currentPrice),
-              accTrade: numberWithCommas(accTrade),
-              openingPrice: numberWithCommas(openingPrice),
-              difference: (currentPrice - openingPrice).toFixed(2),
-            },
+            template_args: template_args,
           },
-          'custom'
-        );
-      } else {
-        replier.reply('해당 코인이 존재하지 않습니다 다른 코인을 조회해주세요.');
+          'custom',
+          true
+        ).then((res) => {
+          if (res.status === 400) {
+            let result = '';
+            result += ticker + '\n\n';
+            result += '등락 ' + (currentPrice - openingPrice).toFixed(2) + '원(' + priceFluctuations + '%)\n';
+            result += '📈24H 고가 : (' + maxPercent + '%) ' + maxPrice + '원\n';
+            result += '📉24H 저가 : (' + minPercent + '%) ' + minPrice + '원\n';
+            result += '24H 종가 : ' + openingPrice + '원\n';
+            result += '📊24H 거래량 : ' + accTrade + '\n\n\n';
+            result += '💰현재가 : (' + priceFluctuations + '%)' + currentPrice + '원';
+            replier.reply(result);
+          }
+        });
       }
     } catch (error) {
       replier.reply('api error');
