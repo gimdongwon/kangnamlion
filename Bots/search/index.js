@@ -6,6 +6,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
   if (msg == '실검') {
     const searchDatas = data.select('div.main-card > div.mdl-card__actions > h4 > a > b');
     let result = '실시간 검색순위\n\n' + full;
+    if (!searchDatas) {
+      return;
+    }
     for (let i = 0; i < searchDatas.length; i++) {
       result += i + 1 + ' ' + searchDatas[i].text() + '\n';
     }

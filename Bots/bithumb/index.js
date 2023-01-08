@@ -14,6 +14,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       const coinList = callCoinSymbol();
       if (ticker in coinList) {
         let coinInfo = callCoinInfo(coinList[ticker]);
+        if (coinInfo === '') {
+          return;
+        }
         coinInfo = coinInfo.data;
         const minPrice = coinInfo['min_price'],
           maxPrice = coinInfo['max_price'],

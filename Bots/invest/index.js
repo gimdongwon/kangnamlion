@@ -20,7 +20,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       // replier.reply('점검중');
       // replier.reply(dataLength.length);
 
-      if (dataLength.length > 0 && target !== 'ionq') {
+      if (dataLength.length > 0) {
         // replier.reply('구글');
         // const imageUrl = data.select('div[class=gyEfO JlxBoc]').text();
         data = data.select('g-card-section').get(0);

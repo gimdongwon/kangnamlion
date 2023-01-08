@@ -26,6 +26,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         org.jsoup.Jsoup.connect('https://api.upbit.com/v1/market/all').ignoreContentType(true).get().text()
       );
       // let data = org.jsoup.Jsoup.connect('https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC').get();
+
       for (let i in coin_symbol_krw) {
         let keywordData = coin_symbol_krw[i];
         let keywordData_replaced = keywordData['korean_name'].replace(/(<([^>]+)>)/gi, ' ');
@@ -34,6 +35,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
         }
       }
     }
+    if (upbit_coin_symbol === '') {
+      return;
+    }
+
     upbit_coin_symbol = upbit_coin_symbol.toUpperCase();
     let upbit_json = upbit_func(upbit_coin_symbol);
     const openingPrice = upbit_json[0]['opening_price'],

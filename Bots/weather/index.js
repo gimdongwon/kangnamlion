@@ -24,8 +24,8 @@ function response(room, msg, sender, isGroupChat, replier) {
 
         let resultHM = url.select('#wob_hm').text(); //습도
 
-        let highTM = url.select('div.gNCp2e > span.wob_t').text().split(' ')[0];
-        let lowTM = url.select('div.ZXCv8e > span.wob_t').text().split(' ')[0];
+        let highTM = url.select('div.wob_ds > div.wNE31c > div.gNCp2e > span.wob_t').text().split(' ')[0];
+        let lowTM = url.select('div.wob_ds > div.wNE31c > div.ZXCv8e > span.wob_t').text().split(' ')[0];
 
         if (resultDC == '') {
           // replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
