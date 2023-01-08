@@ -8,7 +8,7 @@ const dictUnit = {
   억: 100000000,
 };
 
-const currencys = ['달러', '달라', '유로', '엔', '위안', '파운드'];
+const currencys = ['불', '달러', '달라', '유로', '엔', '위안', '파운드'];
 
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 
@@ -23,7 +23,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       const valueKorea = volume.replace(/[0-9]/g, '');
       volume = volume.replace(/[^0-9]/g, '') * dictUnit[valueKorea];
     }
+    // 통화
     if (currencys.includes(ticker)) {
+      if (ticker === '불') ticker = '달러';
       const url = 'https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=' + ticker;
       const dollorData = org.jsoup.Jsoup.connect(url).get();
       let money = dollorData.select('div.inner_price > em.txt_num').text();
@@ -31,17 +33,26 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       if (ticker === '엔') {
         money *= 0.01;
       }
-      replier.reply('= ' + numberWithCommas(money * volume) + ' 원');
+      money = numberWithCommas(money * volume);
+      if (money.length > 10) {
+        money = replaceNumToText(money);
+      }
+      replier.reply('= ' + money + ' 원');
       return;
     }
     const coinList = callCoinSymbol();
-
+    // 코인
     if (ticker in coinList) {
       let coinInfo = callCoinInfo(coinList[ticker]);
       coinInfo = coinInfo.data;
       const currentPrice = coinInfo['closing_price'];
-      replier.reply('= ' + numberWithCommas(currentPrice * volume) + ' 원');
+      let money = numberWithCommas(currentPrice * volume);
+      if (money.length > 10) {
+        money = replaceNumToText(money);
+      }
+      replier.reply('= ' + money + ' 원');
     } else {
+      // 주식
       const data = org.jsoup.Jsoup.connect(
         'https://www.google.com/search?q=주식%20' + ticker.replace(/ /g, '%20')
       ).get();
@@ -49,8 +60,15 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       const unit = data.select('span.knFDje').text();
       let currentInvestPrice = data.select('span.wT3VGc').text();
       currentInvestPrice = currentInvestPrice.replace(',', '');
-
       replier.reply('= ' + numberWithCommas(currentInvestPrice * volume) + ' ' + unit);
+      if (unit === 'USD') {
+        const dollor = callDollor();
+        let money = numberWithCommas(currentInvestPrice * volume * dollor);
+        if (money.length > 10) {
+          money = replaceNumToText(money);
+        }
+        replier.reply('= ' + money + ' 원');
+      }
     }
   }
 }
@@ -78,4 +96,18 @@ function callCoinInfo(ticker) {
       .get()
       .text()
   );
+}
+
+function callDollor() {
+  const url = 'https://search.daum.net/search?nil_suggest=btn&w=tot&DA=SBC&q=' + '달러';
+  const dollorData = org.jsoup.Jsoup.connect(url).get();
+  let money = dollorData.select('div.inner_price > em.txt_num').text();
+  money = Math.round(money);
+  return money;
+}
+
+function replaceNumToText(money) {
+  money = money.slice(0, money.length - 10).replace(/,/gi, '');
+  money = numberWithCommas(money) + '억';
+  return money;
 }
