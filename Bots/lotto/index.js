@@ -1,5 +1,4 @@
-function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
-  if (sender === '용키') return;
+function main(replier, room, msg) {
   if (msg === '로또') {
     let data = org.jsoup.Jsoup.connect(
       'https://search.naver.com/search.naver?ie=UTF-8&query=%EB%A1%9C%EB%98%90%EB%B2%88%ED%98%B8&sm=chr_hty'
@@ -21,16 +20,19 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
       }
     }
     let bonusNum = lottos.pop();
+    lottos.sort((a, b) => a - b);
     replier.reply('추천번호 : ' + lottos.join(', ') + '\n보너스번호 + ' + bonusNum);
   } else if (msg.startsWith('내로또')) {
     let numbers = msg.split(' ');
     numbers.shift();
+
     let data = org.jsoup.Jsoup.connect('https://m.search.naver.com/search.naver?query=로또').get();
-    let plusNum = data.select('div.plus_num');
+
+    let plusNum = data.select('div.bonus_number');
     plusNum = plusNum.select('span').text();
 
-    data = data.select('div.lot_num');
-    data = data.select('li');
+    data = data.select('div.winning_number');
+    data = data.select('span');
 
     data = data.text().split(' ');
     data.push(plusNum);

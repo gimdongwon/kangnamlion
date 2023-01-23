@@ -5,7 +5,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     }
   };
   if (msg.startsWith('주식 ')) {
-    const symbol_invest = msg.slice(2);
+    const symbol_invest = msg.slice(3);
     importFn('invest', symbol_invest);
     return;
   }
@@ -34,8 +34,23 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     return;
   }
 
+  if (msg.startsWith('코로나')) {
+    importFn('covid19', msg);
+    return;
+  }
+
+  if (msg === '김프') {
+    importFn('kimchi_premium');
+    return;
+  }
+
   if (msg === '실검') {
     importFn('search');
+    return;
+  }
+
+  if (msg.includes('로또')) {
+    importFn('lotto', msg);
     return;
   }
 
