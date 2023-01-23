@@ -1,12 +1,9 @@
-const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
-const { KakaoLinkClient } = require('kakaolink');
-const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
-Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
+const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
 
-function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
-  let [command, ticker, day] = msg.split(' ');
+function main(replier, room, target) {
+  let [ticker, day] = target.split(' ');
 
-  if (ticker && command === '차트') {
+  if (ticker) {
     if (day === undefined) {
       day = '1일';
     } else if (!['1일', '1주', '1개월', '3개월', '1년'].includes(day)) {
@@ -41,28 +38,23 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
     }
     if (!currency) currency = '원';
     if (price.includes('원')) price = price.replace('원', '');
-    try {
-      Kakao.sendLink(room, {
-        template_id: 85798,
-        template_args: {
-          image: image,
-          ticker: ticker,
-          day: day,
-          price: price,
-          ratio: ratio,
-          highPrice: highPrice,
-          lowPrice: lowPrice,
-          tradingVolumn: tradingVolumn,
-          currency: currency,
-        },
-      }).then((res) => {
-        if (res.status === 400) {
-          replier.reply('카링 호출량을 초과하였습니다. 다른 명령어를 사용해주세요 🙏');
-        }
-      });
-    } catch (error) {
-      replier.reply('차트 호출 실패. 다시 시도해주세요 😱');
-    }
+
+    const template_args = {
+      template_id: 85798,
+      template_args: {
+        image: image,
+        ticker: ticker,
+        day: day,
+        price: price,
+        ratio: ratio,
+        highPrice: highPrice,
+        lowPrice: lowPrice,
+        tradingVolumn: tradingVolumn,
+        currency: currency,
+      },
+    };
+    const result = '카링 호출량을 초과하였습니다. 다른 명령어를 사용해주세요 🙏';
+    useKakaoLink(room, replier, template_args, result);
   }
 }
 

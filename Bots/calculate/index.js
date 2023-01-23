@@ -12,10 +12,10 @@ const currencys = ['불', '달러', '달라', '유로', '엔', '위안', '파운
 
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 
-function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
+function main(replier, room, target) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
-  let [command, volume, ticker] = msg.split(' ');
-  if (volume && ticker && (command === '계산' || command === '계싼')) {
+  let [volume, ticker] = target.split(' ');
+  if (volume && ticker) {
     if (Object.keys(dict_data).indexOf(ticker) > -1) {
       ticker = dict_data[ticker];
     }

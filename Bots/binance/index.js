@@ -1,12 +1,6 @@
-const env = JSON.parse(FileStream.read('sdcard/msgbot/env.json'));
-const { KakaoLinkClient } = require('kakaolink');
-const Kakao = new KakaoLinkClient(env['KAKAO_CLIENT_KEY'], 'https://developers.kakao.com');
-Kakao.login(env['KAKAO_ID'], env['KAKAO_PASSWORD']); // 카카오 계정 아이디와 비밀번호
-
-function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
+function main(replier, room, ticker) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/binanceDict.json'));
-  let [command, ticker] = msg.split(' ');
-  if (ticker && command === '바') {
+  if (ticker) {
     try {
       if (Object.keys(dict_data).indexOf(ticker) > -1) {
         ticker = dict_data[ticker];
@@ -41,30 +35,9 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName)
 
       // result += '24H 종가 : ' + openingPrice + '원\n';
       replier.reply(result);
-      /*
-        Kakao.sendLink(
-          room,
-          {
-            template_id: 79951,
-            template_args: {
-              ticker: ticker,
-              minPrice: numberWithCommas(minPrice),
-              maxPrice: numberWithCommas(maxPrice),
-              maxPercent: maxPercent,
-              minPercent: minPercent,
-              priceFluctuations: priceFluctuations,
-              currentPrice: numberWithCommas(currentPrice),
-              accTrade: numberWithCommas(accTrade),
-              openingPrice: numberWithCommas(openingPrice),
-              difference: (currentPrice - openingPrice).toFixed(2),
-            },
-          },
-          'custom'
-        );
-        */
     } catch (e) {
       Api.replyRoom(
-        '개발자 이름',
+        '김동원',
         '[ 가격알람봇 오류발생🚨  ]\n\n오류 이름: ' +
           e.name +
           '\n오류 메시지: ' +
