@@ -1,6 +1,6 @@
-const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
-
-function main(replier, room, target) {
+function main(msg, sender, replier, room, target) {
+  const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
+  const useError = Bridge.getScopeOf('useError').replyError;
   try {
     const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
 
@@ -43,7 +43,10 @@ function main(replier, room, target) {
     result += '💰바닥가 : ' + krwPrice + '원';
 
     useKakaoLink(room, replier, template_args, result);
-  } catch (error) {}
+  } catch (e) {
+    replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+    useError(msg, sender, room, e);
+  }
 }
 
 function opensea_func(opensea_symbol) {

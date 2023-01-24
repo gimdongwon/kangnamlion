@@ -1,4 +1,4 @@
-function main(replier, room, msg) {
+function main(msg, sender, replier, room, req) {
   if (msg === '로또') {
     let data = org.jsoup.Jsoup.connect(
       'https://search.naver.com/search.naver?ie=UTF-8&query=%EB%A1%9C%EB%98%90%EB%B2%88%ED%98%B8&sm=chr_hty'

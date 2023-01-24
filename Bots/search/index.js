@@ -1,6 +1,6 @@
 const full = '\u200b'.repeat(1000);
 
-function main(replier) {
+function main(msg, sender, replier, room, req) {
   let data = org.jsoup.Jsoup.connect('http://rank.ezme.net/').get();
 
   const searchDatas = data.select('div.main-card > div.mdl-card__actions > h4 > a > b');

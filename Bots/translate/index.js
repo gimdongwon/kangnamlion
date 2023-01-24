@@ -1,4 +1,5 @@
-function main(replier, room, word) {
+function main(msg, sender, replier, room, word) {
+  const useError = Bridge.getScopeOf('useError').replyError;
   try {
     if (word.length === '' || word === '') {
       replier.reply('올바른 단어 입력해주세요');
@@ -22,6 +23,7 @@ function main(replier, room, word) {
 
     replier.reply(result);
   } catch (error) {
-    replier.reply(error);
+    replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+    useError(msg, sender, room, e);
   }
 }

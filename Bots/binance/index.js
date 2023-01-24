@@ -1,4 +1,5 @@
-function main(replier, room, ticker) {
+function main(msg, sender, replier, room, ticker) {
+  const useError = Bridge.getScopeOf('useError').replyError;
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/binanceDict.json'));
   if (ticker) {
     try {
@@ -36,15 +37,8 @@ function main(replier, room, ticker) {
       // result += '24H 종가 : ' + openingPrice + '원\n';
       replier.reply(result);
     } catch (e) {
-      Api.replyRoom(
-        '김동원',
-        '[ 가격알람봇 오류발생🚨  ]\n\n오류 이름: ' +
-          e.name +
-          '\n오류 메시지: ' +
-          e.message +
-          '\n오류 위치: ' +
-          e.lineNumber
-      );
+      replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+      useError(msg, sender, room, e);
     }
   }
 }

@@ -1,4 +1,4 @@
-function main(replier, room, msg) {
+function main(msg, sender, replier, room) {
   if (msg == '코로나') {
     return replier.reply('[한국]\n' + Covid(country['한국']));
   } else {

@@ -1,4 +1,4 @@
-function main(replier) {
+function main(msg, sender, replier, room, req) {
   const coin = 'BTC';
 
   //업비트 btc 가격

@@ -1,6 +1,6 @@
 const full = '\u200b'.repeat(1000);
 
-function main(replier, room, msg) {
+function main(msg, sender, replier, room) {
   if (msg.includes('사전목록') || msg.includes('사전추가') || msg.includes('사전삭제')) {
     if (msg.includes('사전목록')) {
       let binanceFlag = msg.includes('바');

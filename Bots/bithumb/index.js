@@ -1,5 +1,7 @@
-function main(replier, room, symbol) {
+function main(msg, sender, replier, room, symbol) {
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
+  const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
+  const useError = Bridge.getScopeOf('useError').replyError;
 
   try {
     if (Object.keys(dict_data).indexOf(symbol) > -1) {
@@ -46,11 +48,11 @@ function main(replier, room, symbol) {
       result += '📊24H 거래량 : ' + accTrade + '\n\n\n';
       result += '💰현재가 : (' + priceFluctuations + '%)' + currentPrice + '원';
 
-      const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
       useKakaoLink(room, replier, template_args, result);
     }
-  } catch (error) {
+  } catch (e) {
     replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+    useError(msg, sender, room, e);
   }
 }
 /* 화폐단위 컴마출력 */

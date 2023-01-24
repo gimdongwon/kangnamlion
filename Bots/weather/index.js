@@ -1,4 +1,6 @@
-function main(replier, room, region) {
+function main(msg, sender, replier, room, region) {
+  const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
+  const useError = Bridge.getScopeOf('useError').replyError;
   if (isNaN(region)) {
     try {
       let url = org.jsoup.Jsoup.connect('https://www.google.com/search?q=' + region + ' 날씨').get();
@@ -42,12 +44,11 @@ function main(replier, room, region) {
       text += '습도 : ' + resultHM + '\n\n';
       text += '좋은 날씨로 좋은 하루보내세요 🦁 🌈☀️❄️💧';
 
-      const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
       useKakaoLink(room, replier, obj, text);
     } catch (e) {
       replier.reply('불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
-      // replier.reply(e);
-      error(e);
+      useError(msg, sender, room, e);
+      // error(e);
       return;
     }
   } else {
