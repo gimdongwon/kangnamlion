@@ -50,19 +50,22 @@ function main(msg, sender, replier, room, symbol) {
     };
 
     let output_text = '';
-    output_text += '[UPBIT API]\n';
-    output_text += '<' + upbit_coin_symbol + '/KRW>\n';
+    output_text += symbol;
+    output_text += '(' + upbit_coin_symbol + ')\n\n';
+    output_text += '📈24H 고가 : (' + maxPercent + '%) ' + numberWithCommas(upbit_json[0].high_price) + ' 원\n';
+    output_text += '📉24H 저가 : (' + minPercent + '%) ' + numberWithCommas(upbit_json[0].low_price) + ' 원\n';
+    output_text += '💵24H 종가 : ' + numberWithCommas(upbit_json[0].prev_closing_price) + ' 원\n';
     output_text +=
-      numberWithCommas('현재가 ' + upbit_json[0].trade_price) +
-      ' (' +
-      (upbit_json[0].signed_change_rate * 100).toFixed(2) +
-      '%)\n\n';
-    output_text += '24H 고가 : (' + maxPercent + '%)' + numberWithCommas(upbit_json[0].high_price) + ' KRW\n';
-    output_text += '24H 저가 : (' + minPercent + '%)' + numberWithCommas(upbit_json[0].low_price) + ' KRW\n';
-    output_text += '24H 종가 : ' + numberWithCommas(upbit_json[0].prev_closing_price) + ' KRW\n';
-    output_text +=
-      '24H 거래량 : ' + numberWithCommas(upbit_json[0].acc_trade_volume_24h.toFixed(2)) + ' ' + upbit_coin_symbol;
+      '📊24H 거래량 : ' + numberWithCommas(upbit_json[0].acc_trade_volume_24h.toFixed(2)) + ' ' + upbit_coin_symbol;
 
+    output_text += numberWithCommas(
+      '\n\n💰현재가 ' +
+        '(' +
+        (upbit_json[0].signed_change_rate * 100).toFixed(2) +
+        '%) ' +
+        upbit_json[0].trade_price +
+        '원'
+    );
     useKakaoLink(room, replier, template_args, output_text);
   } catch (error) {
     replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');

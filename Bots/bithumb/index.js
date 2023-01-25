@@ -41,12 +41,12 @@ function main(msg, sender, replier, room, symbol) {
 
       let result = '';
       result += symbol + '\n\n';
-      result += '등락 ' + (currentPrice - openingPrice).toFixed(2) + '원(' + priceFluctuations + '%)\n';
-      result += '📈24H 고가 : (' + maxPercent + '%) ' + maxPrice + '원\n';
-      result += '📉24H 저가 : (' + minPercent + '%) ' + minPrice + '원\n';
-      result += '24H 종가 : ' + openingPrice + '원\n';
+      result += '🔽등락 ' + (currentPrice - openingPrice).toFixed(2) + '원(' + priceFluctuations + '%)\n';
+      result += '📈24H 고가 : (' + maxPercent + '%) ' + numberWithCommas(maxPrice) + '원\n';
+      result += '📉24H 저가 : (' + minPercent + '%) ' + numberWithCommas(minPrice) + '원\n';
+      result += '💵24H 종가 : ' + numberWithCommas(openingPrice) + '원\n';
       result += '📊24H 거래량 : ' + accTrade + '\n\n\n';
-      result += '💰현재가 : (' + priceFluctuations + '%)' + currentPrice + '원';
+      result += '💰현재가 : (' + priceFluctuations + '%) ' + numberWithCommas(currentPrice) + '원';
 
       useKakaoLink(room, replier, template_args, result);
     }
@@ -78,4 +78,10 @@ function callCoinInfo(ticker) {
       .get()
       .text()
   );
+}
+
+/* 화폐단위 컴마출력 */
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
