@@ -1,9 +1,23 @@
+const {
+  getWeather,
+  getPopularSearch,
+  getLotto,
+  myDictFunction,
+  getKimchiPrimium,
+  getCovid19,
+  translate,
+  opensea,
+  chart,
+  calculate,
+  binance,
+  bithumb,
+  upbit,
+  invest,
+} = require('ApiService');
+const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
+const useError = Bridge.getScopeOf('useError').replyError;
+
 function response(room, msg, sender, isGroupChat, replier, ImageDB) {
-  const importFn = (botName, req) => {
-    if (botName && req !== '') {
-      return Bridge.getScopeOf(botName).main(msg, sender, replier, room, req);
-    }
-  };
   if (
     [
       '주식 ',
@@ -23,6 +37,23 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '사자설명서',
     ].filter((item) => msg.includes(item)).length > 0
   ) {
+    // 기록 용
+
+    //   const commandData = JSON.parse(DataBase.getDataBase('CommandRecord.json'));
+    const userData = JSON.parse(DataBase.getDataBase('UserRecord.json'));
+    if (userData[sender]) {
+      userData[sender] += 1;
+    } else {
+      userData[sender] = 1;
+    }
+    DataBase.setDataBase('UserRecord.json', JSON.stringify(userData));
+    //   if (commandData[botName]) {
+    //     commandData[botName] += 1;
+    //   } else {
+    //     commandData[botName] = 1;
+    //   }
+    // DataBase.setDataBase('CommandRecord.json', JSON.stringify(commandData));
+
     //   let result = '';
     //   result += '해당메시지: ' + msg;
     //   result += '\n보낸사람: ' + sender;
@@ -30,82 +61,74 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     //   result += '\n보낸방: ' + room;
 
     //   Api.replyRoom('김동원', result);
+
     if (msg.startsWith('주식 ')) {
-      const symbol_invest = msg.slice(3);
-      importFn('invest', symbol_invest);
+      invest(msg, sender, replier, room, useKakaoLink, useError);
       return;
     }
 
     if (msg.startsWith('업 ')) {
-      const symbol_upbit = msg.slice(2);
-      importFn('upbit', symbol_upbit);
+      upbit(msg, sender, replier, room, useKakaoLink, useError);
       return;
     }
 
     if (msg.startsWith('빗 ')) {
-      const symbol_bithumb = msg.slice(2);
-      importFn('bithumb', symbol_bithumb);
+      bithumb(msg, sender, replier, room, useKakaoLink, useError);
       return;
     }
 
     if (msg.startsWith('바 ')) {
-      const symbol_binance = msg.slice(2);
-      importFn('binance', symbol_binance);
+      binance(msg, sender, replier, room, useError);
       return;
     }
 
     if (msg.startsWith('계산 ')) {
-      const target = msg.slice(3);
-      importFn('calculate', target);
+      calculate(msg, sender, replier, room);
       return;
     }
 
     if (msg.startsWith('차트 ')) {
-      const target_chart = msg.slice(3);
-      importFn('chart', target_chart);
+      chart(msg, sender, replier, room, useKakaoLink, useError);
       return;
     }
 
     if (msg.startsWith('옾 ')) {
-      const symbol_opensea = msg.slice(2);
-      importFn('opensea', symbol_opensea);
+      opensea(msg, sender, replier, room, useKakaoLink, useError);
       return;
     }
 
     if (msg.startsWith('날씨 ')) {
-      const region = msg.slice(3);
-      importFn('weather', region);
+      getWeather(msg, sender, replier, room, useKakaoLink, useError);
       return;
     }
 
     if (msg.startsWith('뜻 ')) {
-      const word = msg.slice(2);
-      importFn('translate', word);
+      translate(msg, sender, replier, room);
       return;
     }
 
     if (msg.startsWith('코로나')) {
-      importFn('covid19', msg);
+      getCovid19(msg, replier);
       return;
     }
 
     if (msg === '김프') {
-      importFn('kimchi_premium');
+      getKimchiPrimium(replier);
       return;
     }
 
     if (msg === '실검') {
-      importFn('search');
+      getPopularSearch(replier);
       return;
     }
 
     if (msg.includes('로또')) {
-      importFn('lotto', msg);
+      getLotto(msg, replier);
       return;
     }
 
     if (msg.includes('사전')) {
-      importFn('dictionary', msg);
+      myDictFunction(msg, replier);
       return;
     }
 

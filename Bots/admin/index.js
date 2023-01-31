@@ -25,22 +25,6 @@ function getAdminList() {
   if (isNull(database) || database == '[]') database = DataBase.setDataBase('AdminList.json', JSON.stringify(database));
   return database;
 }
-// function getRecords() {
-//   let database = DataBase.getDataBase('Record.json');
-//   if (isNull(database) || database == '[]') database = DataBase.setDataBase('Record.json', JSON.stringify(database));
-//   return database;
-// }
-
-// function getRecordText() {
-//   let Records = JSON.parse(getRecords());
-//   let text = '';
-//   for (let idx in Records) {
-//     // text = text.concat(Records[idx]['name'] + '\n');
-//     text = text.concat(idx);
-//   }
-//   if (text == '') text = '없습니다.';
-//   return text.slice(0, -1);
-// }
 
 // 관리자 조회
 function getAdminText() {
@@ -280,9 +264,12 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
       }
     }
   }
-  // if (msg == '*기록') {
-  //   replier.reply(getRecordText());
-  // }
+  if (msg == '*기록') {
+    const commandData = JSON.parse(DataBase.getDataBase('CommandRecord.json'));
+    const userData = JSON.parse(DataBase.getDataBase('UserRecord.json'));
+    replier.reply(JSON.stringify(commandData));
+    replier.reply(JSON.stringify(userData));
+  }
 }
 
 //아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.

@@ -1,7 +1,6 @@
-function main(msg, sender, replier, room, symbol) {
+function main(msg, sender, replier, room, useKakaoLink, useError) {
+  let symbol = msg.slice(3);
   const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
-  const useKakaoLink = Bridge.getScopeOf('kakaolink').useKakaoLink;
-  const useError = Bridge.getScopeOf('useError').replyError;
   try {
     if (Object.keys(dict_data).indexOf(symbol) > -1) {
       symbol = dict_data[symbol];
@@ -51,9 +50,9 @@ function main(msg, sender, replier, room, symbol) {
 
       let result = '';
       result += title + '\n\n';
-      result += '장전장후 가격 : ' + priorPercent + priorPrice + currency + '\n';
+      result += '장전장후 가격 : ' + priorPercent + ' ' + priorPrice + ' ' + currency + '\n';
       result += '💵종가 : ' + endPrice + ' ' + currency + '\n';
-      result += '🔽등락률 : ' + percent + profitPrice + currency + '\n';
+      result += '🔽등락률 : ' + percent + profitPrice + ' ' + currency + '\n';
       result += '📈📉24최고최저 : ' + maxPrice + ' | ' + minPrice + currency + '\n\n';
       result += '💰현재가격 : ' + currentPrice + currency.replace('KRW', '원');
 
@@ -99,12 +98,12 @@ function main(msg, sender, replier, room, symbol) {
         currency_N = currency_N.split(' ')[1];
 
         let result = '';
-        result += title_N + '\\n';
-        result += '장전장후 가격 : ' + priorPrice_N + currency_N + '\n';
+        result += title_N + '\n\n';
+        result += '장전장후 가격 : ' + priorPrice_N + ' ' + currency_N + '\n';
         result += '💵종가 : ' + priorPrice_N + ' ' + currency_N + '\n';
         result += '🔽등락률 : ' + difference + ' ' + percent_N + currency_N + '\n';
         result += '📈📉24최고최저 : ' + maxPrice_N + currency_N + ' | ' + minPrice_N + currency_N + '\n\n';
-        result += '💰현재가격 : ' + currentPrice_N + currency_N.replace('KRW', '원');
+        result += '💰현재가격 : ' + currentPrice_N + ' ' + currency_N.replace('KRW', '원');
         const template_args_N = {
           template_id: 77842,
           template_args: {
@@ -126,3 +125,5 @@ function main(msg, sender, replier, room, symbol) {
     useError(msg, sender, room, e);
   }
 }
+
+exports.ApiService = main;
