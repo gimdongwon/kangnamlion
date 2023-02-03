@@ -5,7 +5,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
     if (Object.keys(dict_data).indexOf(symbol) > -1) {
       symbol = dict_data[symbol];
     }
-    let data = org.jsoup.Jsoup.connect('https://www.google.com/search?q=주식%20' + symbol.replace(/ /g, '%20')).get();
+    const data = org.jsoup.Jsoup.connect('https://www.google.com/search?q=주식%20' + symbol.replace(/ /g, '%20')).get();
     const dataLength = data.select('g-card-section.N9cLBc');
 
     if (dataLength.length > 0) {
@@ -13,7 +13,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       const title = data.select('span[class=aMEhee PZPZlF]').text();
 
       let currentPrice = data.select('div.wGt0Bc > div.PZPZlf > span > span > span[jsname=vWLAgc]').text();
-      const currency = data.select('span[jsname=T3Us2d]').text();
+      const currency = data.select('span[jsname=T3Us2d]').text().split(' ')[0];
       const profitPrice = data.select('span[jsname=qRSVye]').text();
       let percent = data.select('span[class=jBBUv]').text();
       const priorPrice = data.select('span[jsname=wurNO]').text();
@@ -39,6 +39,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
           percent = percent.replace('(', '(-');
         }
       }
+      percent = percent.split(' ')[0];
 
       // 프리마켓 반영
       let endPrice = currentPrice;
@@ -47,7 +48,6 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
         currentPrice = priorPrice;
         endPrice = temp;
       }
-
       let result = '';
       result += title + '\n\n';
       result += '장전장후 가격 : ' + priorPercent + ' ' + priorPrice + ' ' + currency + '\n';
@@ -73,10 +73,8 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
           // dataLength: dataLength,
         },
       };
-
       useKakaoLink(room, replier, template_args, result);
     } else {
-      // replier.reply('네이버 ' + dataLength.text());
       let newData = org.jsoup.Jsoup.connect(
         'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=주식%20' +
           symbol.replace(/ /g, '%20')
