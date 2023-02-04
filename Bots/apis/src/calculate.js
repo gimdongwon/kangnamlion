@@ -12,9 +12,8 @@ const currencys = ['불', '달러', '달라', '유로', '엔', '위안', '파운
 
 const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 
-function main(msg, sender, replier, room) {
+function main(msg, sender, replier, room, useError) {
   const target = msg.slice(3);
-  const useError = Bridge.getScopeOf('useError').replyError;
   try {
     const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
 

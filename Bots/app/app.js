@@ -82,7 +82,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     }
 
     if (msg.startsWith('계산 ')) {
-      calculate(msg, sender, replier, room);
+      calculate(msg, sender, replier, room, useError);
       return;
     }
 
