@@ -1,0 +1,14 @@
+exports.getWeather = require('./src/weather').ApiService;
+exports.getPopularSearch = require('./src/popularSearch').ApiService;
+exports.getLotto = require('./src/lotto').ApiService;
+exports.myDictFunction = require('./src/dictionary').ApiService;
+exports.getKimchiPrimium = require('./src/kimchiPrimium').ApiService;
+exports.getCovid19 = require('./src/covid19').ApiService;
+exports.translate = require('./src/translate').ApiService;
+exports.opensea = require('./src/opensea').ApiService;
+exports.chart = require('./src/chart').ApiService;
+exports.calculate = require('./src/calculate').ApiService;
+exports.binance = require('./src/binance').ApiService;
+exports.bithumb = require('./src/bithumb').ApiService;
+exports.upbit = require('./src/upbit').ApiService;
+exports.invest = require('./src/invest').ApiService;

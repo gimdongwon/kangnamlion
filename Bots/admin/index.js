@@ -1,8 +1,6 @@
 const full = '\u200b'.repeat(1000);
 const scriptName = 'admin';
 
-const DFLT_ADMIN = [{ name: '김동원' }, { name: '김승갑' }];
-
 let RoomList = [];
 
 function checkRoom(room) {
@@ -24,8 +22,7 @@ function isNull(value) {
 
 function getAdminList() {
   let database = DataBase.getDataBase('AdminList.json');
-  if (isNull(database) || database == '[]')
-    database = DataBase.setDataBase('AdminList.json', JSON.stringify(DFLT_ADMIN));
+  if (isNull(database) || database == '[]') database = DataBase.setDataBase('AdminList.json', JSON.stringify(database));
   return database;
 }
 
@@ -86,6 +83,12 @@ function help() {
   help_msg = help_msg.concat('\n*관리자 제거 admin1 ...');
   help_msg = help_msg.concat('\n');
   help_msg = help_msg.concat('\n*공지\n공지할 방이름\n하고싶은말');
+
+  // custom
+  help_msg = help_msg.concat('\n\nCustom');
+  help_msg = help_msg.concat('\n*에러상태');
+  help_msg = help_msg.concat('\n*기록');
+
   return help_msg;
 }
 
@@ -100,6 +103,25 @@ function botStatus() {
     stat_msg = stat_msg.concat('\n\n');
   }
   return stat_msg.slice(0, -2);
+}
+
+function errorStatus() {
+  let stat_msg = '';
+  let scripts = Api.getScriptNames();
+  stat_msg = stat_msg.concat('[에러 상태]\n\n');
+  for (let idx in scripts) {
+    if (Api.isOn(scripts[idx]) === false) {
+      stat_msg = stat_msg.concat(scripts[idx] + '\n');
+      Api.on(scripts[idx]);
+    }
+  }
+  if (stat_msg === '[에러 상태]\n\n') {
+    stat_msg = stat_msg.concat('에러 상태 봇이 없습니다.');
+  } else {
+    stat_msg = stat_msg.concat('에러 상태 봇이 감지되어 재구동하였습니다.');
+  }
+
+  return stat_msg;
 }
 
 function deviceStatus() {
@@ -143,6 +165,8 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
 
   // 스크립트 상태 확인
   if (msg == '*상태') replier.reply(botStatus());
+
+  if (msg === '*에러상태') replier.reply(errorStatus());
 
   function reCompile(message) {
     let contents = message.replace('*재컴파일', '').trim();
@@ -239,6 +263,12 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }
       }
     }
+  }
+  if (msg == '*기록') {
+    const commandData = JSON.parse(DataBase.getDataBase('CommandRecord.json'));
+    const userData = JSON.parse(DataBase.getDataBase('UserRecord.json'));
+    replier.reply(JSON.stringify(commandData));
+    replier.reply(JSON.stringify(userData));
   }
 }
 
