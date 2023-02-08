@@ -12,3 +12,4 @@ exports.binance = require('./src/binance').ApiService;
 exports.bithumb = require('./src/bithumb').ApiService;
 exports.upbit = require('./src/upbit').ApiService;
 exports.invest = require('./src/invest').ApiService;
+exports.news = require('./src/news').ApiService;

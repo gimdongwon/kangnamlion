@@ -13,6 +13,7 @@ const {
   bithumb,
   upbit,
   invest,
+  news,
 } = require('ApiService');
 const { useKakaoLink, useError } = require('common');
 
@@ -34,6 +35,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '로또',
       '사전',
       '사자설명서',
+      '뉴스',
     ].filter((item) => msg.includes(item)).length > 0
   ) {
     // 기록 용
@@ -128,6 +130,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
 
     if (msg.includes('사전')) {
       myDictFunction(msg, replier);
+      return;
+    }
+    if (msg.includes('뉴스 ')) {
+      news(msg, replier);
       return;
     }
 
