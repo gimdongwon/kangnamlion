@@ -14,6 +14,7 @@ const {
   upbit,
   invest,
   news,
+  walk,
 } = require('ApiService');
 const { useKakaoLink, useError } = require('common');
 
@@ -35,6 +36,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '로또',
       '사전',
       '뉴스',
+      '워크',
     ].filter((item) => msg.includes(item)).length === 0
   ) {
     return;
@@ -136,6 +138,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
   }
   if (msg.includes('뉴스 ')) {
     news(msg, replier);
+    return;
+  }
+  if (msg === '워크') {
+    walk(replier);
     return;
   }
 }
