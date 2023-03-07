@@ -36,7 +36,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '로또',
       '사전',
       '뉴스',
-      '워크',
+      'ㅋㅇㄷ',
     ].filter((item) => msg.includes(item)).length === 0
   ) {
     return;
@@ -140,7 +140,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     news(msg, replier);
     return;
   }
-  if (msg === '워크') {
+  if (msg === 'ㅋㅇㄷ') {
     walk(replier);
     return;
   }

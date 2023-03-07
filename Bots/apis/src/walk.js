@@ -3,9 +3,9 @@ function main(replier) {
 
   let result = '';
   result += '👟SuperWalk 대시보드\n\n';
-  result += 'KLAY 클레이튼\n' + data['KLAY'].toFixed(2) + ' 원\n\n';
-  result += 'WALK 워크\n' + data['WALK'].toFixed(2) + ' 원\n\n';
-  result += 'GRND 그라운드\n' + data['GRND'].toFixed(2) + ' 원\n\n';
+  result += 'KLAY 클레이튼\n' + data['KLAY'].toFixed(1) + ' 원\n\n';
+  result += 'WALK 워크\n' + data['WALK'].toFixed(1) + ' 원\n\n';
+  result += 'GRND 그라운드\n' + data['GRND'].toFixed(1) + ' 원\n\n';
   result += 'by 강남사자';
   replier.reply(result);
 }
