@@ -10,7 +10,7 @@ function main(msg, replier) {
     'https://search.naver.com/search.naver?query=' + skip + '&where=news&ie=utf8&sm=nws_hty'
   ).get();
 
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < web.select('a.news_tit').length; i++) {
     a +=
       '=> ' +
       web.select('a.news_tit').get(i).text() +
