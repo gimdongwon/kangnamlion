@@ -2,7 +2,9 @@ function main(msg, replier) {
   if (msg == '코로나') {
     return replier.reply('[한국]\n' + Covid(country['한국']));
   } else {
-    return replier.reply('[' + msg.substr(4) + ']\n' + Covid(country[msg.substr(4)]));
+    if (country[msg.substr(4)]) {
+      return replier.reply('[' + msg.substr(4) + ']\n' + Covid(country[msg.substr(4)]));
+    }
   }
 }
 
