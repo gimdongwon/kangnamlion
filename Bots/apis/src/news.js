@@ -2,7 +2,7 @@ const blank = '\u200b'.repeat(1000);
 
 function main(msg, replier) {
   let skip = msg.substr(3);
-  if (skip.length <= 0) {
+  if (skip.length <= 0 || msg.slice(0, 3) !== '뉴스 ') {
     return;
   }
   let a = '';

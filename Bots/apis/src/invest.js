@@ -73,7 +73,8 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
           // dataLength: dataLength,
         },
       };
-      useKakaoLink(room, replier, template_args, result);
+      replier.reply(result);
+      // useKakaoLink(room, replier, template_args, result);
     } else {
       let newData = org.jsoup.Jsoup.connect(
         'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=주식%20' +
@@ -115,7 +116,8 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
             profitPrice: difference,
           },
         };
-        useKakaoLink(room, replier, template_args_N, result);
+        replier.reply(result);
+        // useKakaoLink(room, replier, template_args_N, result);
       }
     }
   } catch (e) {
