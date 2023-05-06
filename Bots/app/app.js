@@ -15,6 +15,7 @@ const {
   invest,
   news,
   walk,
+  gas,
 } = require('ApiService');
 const { useKakaoLink, useError } = require('common');
 
@@ -37,6 +38,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '사전',
       '뉴스',
       'ㅋㅇㄷ',
+      '기위',
     ].filter((item) => msg.includes(item)).length === 0
   ) {
     return;
@@ -137,6 +139,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
   if (msg === 'ㅋㅇㄷ') {
     walk(replier);
     botName = 'walk';
+  }
+  if (msg === '기위') {
+    gas(replier);
+    botName = 'gas';
   }
   if (commandData[botName]) {
     commandData[botName] += 1;
