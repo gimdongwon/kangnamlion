@@ -15,3 +15,4 @@ exports.invest = require('./src/invest').ApiService;
 exports.news = require('./src/news').ApiService;
 exports.walk = require('./src/walk').ApiService;
 exports.gas = require('./src/gas').ApiService;
+exports.exchange = require('./src/exchange').ApiService;

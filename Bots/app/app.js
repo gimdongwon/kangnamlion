@@ -16,6 +16,7 @@ const {
   news,
   walk,
   gas,
+  exchange,
 } = require('ApiService');
 const { useKakaoLink, useError } = require('common');
 
@@ -39,6 +40,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '뉴스',
       'ㅋㅇㄷ',
       '기위',
+      '환율',
     ].filter((item) => msg.includes(item)).length === 0
   ) {
     return;
@@ -94,6 +96,8 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
   }
 
   if (msg.startsWith('옾 ')) {
+    replier.reply('opensea api 유료화로 조회 불가');
+    return;
     opensea(msg, sender, replier, room, useKakaoLink, useError);
     botName = 'opensea';
   }
@@ -104,7 +108,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
   }
 
   if (msg.startsWith('뜻 ')) {
-    translate(msg, sender, replier, room);
+    translate(msg, sender, replier, room, useError);
     botName = 'translate';
   }
 
@@ -144,6 +148,11 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     gas(replier);
     botName = 'gas';
   }
+  if (msg === '환율') {
+    exchange(replier);
+    botName = 'exchange';
+  }
+
   if (commandData[botName]) {
     commandData[botName] += 1;
   } else {
