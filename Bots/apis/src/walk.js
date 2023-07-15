@@ -16,10 +16,33 @@ function main(replier) {
   let result = '';
   result += '📌SuperWalk 대시보드\n\n';
   result +=
-    'GRND 그라운드\n ' + grndObj.price + '원 ' + grndObj.ratio + '% ' + sign[selectSign(grndObj.ratio)] + '\n\n';
-  result += 'WALK 워크\n ' + walkObj.price + '원 ' + walkObj.ratio + '% ' + sign[selectSign(walkObj.ratio)] + '\n\n';
+    'GRND 그라운드\n ' +
+    grndObj.price +
+    '원 ' +
+    selectUpDown(grndObj.ratio) +
+    grndObj.ratio +
+    '% ' +
+    sign[selectSign(grndObj.ratio)] +
+    '\n\n';
   result +=
-    'KLAY 클레이튼\n ' + klayObj.price + '원 ' + klayObj.ratio + '% ' + sign[selectSign(klayObj.ratio)] + '\n\n' + '';
+    'WALK 워크\n ' +
+    walkObj.price +
+    '원 ' +
+    selectUpDown(walkObj.ratio) +
+    walkObj.ratio +
+    '% ' +
+    sign[selectSign(walkObj.ratio)] +
+    '\n\n';
+  result +=
+    'KLAY 클레이튼\n ' +
+    klayObj.price +
+    '원 ' +
+    selectUpDown(klayObj.ratio) +
+    klayObj.ratio +
+    '% ' +
+    sign[selectSign(klayObj.ratio)] +
+    '\n\n' +
+    '';
   result += '스왑스캐너 x 슈퍼워크 x 강남사자🚀';
   replier.reply(result);
 }
@@ -58,5 +81,6 @@ const newGetTokenPrice = () => {
 };
 
 const selectSign = (target) => (target < 0 ? 'down' : 'up');
+const selectUpDown = (target) => (target === 'down' ? '-' : '+');
 
 exports.ApiService = main;
