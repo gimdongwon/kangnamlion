@@ -65,6 +65,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
         upbit_json[0].trade_price +
         '원'
     );
+    replier.reply(output_text);
     useKakaoLink(room, replier, template_args, output_text);
   } catch (error) {
     replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');

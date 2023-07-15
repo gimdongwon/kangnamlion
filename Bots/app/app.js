@@ -15,6 +15,8 @@ const {
   invest,
   news,
   walk,
+  gas,
+  exchange,
 } = require('ApiService');
 const { useKakaoLink, useError } = require('common');
 
@@ -37,14 +39,16 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '사전',
       '뉴스',
       'ㅋㅇㄷ',
+      '기위',
+      '환율',
     ].filter((item) => msg.includes(item)).length === 0
   ) {
     return;
   }
 
   // 기록 용
-
-  //   const commandData = JSON.parse(DataBase.getDataBase('CommandRecord.json'));
+  let botName = '';
+  const commandData = JSON.parse(DataBase.getDataBase('CommandRecord.json'));
   const userData = JSON.parse(DataBase.getDataBase('UserRecord.json'));
   if (userData[sender]) {
     userData[sender] += 1;
@@ -52,12 +56,6 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     userData[sender] = 1;
   }
   DataBase.setDataBase('UserRecord.json', JSON.stringify(userData));
-  //   if (commandData[botName]) {
-  //     commandData[botName] += 1;
-  //   } else {
-  //     commandData[botName] = 1;
-  //   }
-  // DataBase.setDataBase('CommandRecord.json', JSON.stringify(commandData));
 
   //   let result = '';
   //   result += '해당메시지: ' + msg;
@@ -69,79 +67,96 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
 
   if (msg.startsWith('주식 ')) {
     invest(msg, sender, replier, room, useKakaoLink, useError);
-    return;
+    botName = 'invest';
   }
 
   if (msg.startsWith('업 ')) {
     upbit(msg, sender, replier, room, useKakaoLink, useError);
-    return;
+    botName = 'upbit';
   }
 
   if (msg.startsWith('빗 ')) {
     bithumb(msg, sender, replier, room, useKakaoLink, useError);
-    return;
+    botName = 'bithumb';
   }
 
   if (msg.startsWith('바 ')) {
     binance(msg, sender, replier, room, useError);
-    return;
+    botName = 'binance';
   }
 
   if (msg.startsWith('계산 ')) {
     calculate(msg, sender, replier, room, useError);
-    return;
+    botName = 'calculate';
   }
 
   if (msg.startsWith('차트 ')) {
     chart(msg, sender, replier, room, useKakaoLink, useError);
-    return;
+    botName = 'chart';
   }
 
   if (msg.startsWith('옾 ')) {
-    opensea(msg, sender, replier, room, useKakaoLink, useError);
+    replier.reply('opensea api 유료화로 조회 불가');
     return;
+    opensea(msg, sender, replier, room, useKakaoLink, useError);
+    botName = 'opensea';
   }
 
   if (msg.startsWith('날씨 ')) {
     getWeather(msg, sender, replier, room, useKakaoLink, useError);
-    return;
+    botName = 'invest';
   }
 
   if (msg.startsWith('뜻 ')) {
-    translate(msg, sender, replier, room);
-    return;
+    translate(msg, sender, replier, room, useError);
+    botName = 'translate';
   }
 
   if (msg.startsWith('코로나')) {
     getCovid19(msg, replier);
-    return;
+    botName = 'covid19';
   }
 
   if (msg === '김프') {
     getKimchiPrimium(replier);
-    return;
+    botName = 'kimchiPrimium';
   }
 
   if (msg === '실검') {
     getPopularSearch(replier);
-    return;
+    botName = 'popularSearch';
   }
 
   if (msg.includes('로또')) {
     getLotto(msg, replier);
-    return;
+    botName = 'lotto';
   }
 
   if (msg.includes('사전')) {
     myDictFunction(msg, replier);
-    return;
+    botName = 'myDictFunction';
   }
   if (msg.includes('뉴스 ')) {
     news(msg, replier);
-    return;
+    botName = 'news';
   }
   if (msg === 'ㅋㅇㄷ') {
     walk(replier);
-    return;
+    botName = 'walk';
   }
+  if (msg === '기위') {
+    gas(replier);
+    botName = 'gas';
+  }
+  if (msg === '환율') {
+    exchange(replier);
+    botName = 'exchange';
+  }
+
+  if (commandData[botName]) {
+    commandData[botName] += 1;
+  } else {
+    commandData[botName] = 1;
+  }
+  DataBase.setDataBase('CommandRecord.json', JSON.stringify(commandData));
 }

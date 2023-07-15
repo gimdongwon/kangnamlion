@@ -15,7 +15,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       let lowTM = url.select('div.wob_ds > div.wNE31c > div.ZXCv8e > span.wob_t').text().split(' ')[0];
 
       if (resultDC == '') {
-        replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
+        // replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
         return;
       }
       const obj = {
@@ -43,7 +43,8 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       text += '습도 : ' + resultHM + '\n\n';
       text += '좋은 날씨로 좋은 하루보내세요 🦁 🌈☀️❄️💧';
 
-      useKakaoLink(room, replier, obj, text);
+      replier.reply(text);
+      // useKakaoLink(room, replier, obj, text);
     } catch (e) {
       replier.reply('불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
       useError(msg, sender, room, e);

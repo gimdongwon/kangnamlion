@@ -46,7 +46,8 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       result += '📊24H 거래량 : ' + accTrade + '\n\n\n';
       result += '💰현재가 : (' + priceFluctuations + '%) ' + numberWithCommas(currentPrice) + '원';
 
-      useKakaoLink(room, replier, template_args, result);
+      replier.reply(result);
+      // useKakaoLink(room, replier, template_args, result);
     }
   } catch (e) {
     replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
