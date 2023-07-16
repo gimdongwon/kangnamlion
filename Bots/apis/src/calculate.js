@@ -17,7 +17,7 @@ function main(msg, sender, replier, room, useError) {
   try {
     const dict_data = JSON.parse(FileStream.read('sdcard/msgbot/dict.json'));
 
-    let [volume, ticker] = target.split(' ');
+    let [ticker, volume] = target.split(' ');
     if (volume && ticker) {
       if (Object.keys(dict_data).indexOf(ticker) > -1) {
         ticker = dict_data[ticker];
@@ -37,23 +37,33 @@ function main(msg, sender, replier, room, useError) {
           money *= 0.01;
         }
         money = numberWithCommas(money * volume);
-        if (money.length > 10) {
-          money = replaceNumToText(money);
-        }
+        // if (money.length > 10) {
+        //   money = replaceNumToText(money);
+        // }
         replier.reply('= ' + money + ' 원');
         return;
       }
-      const coinList = callCoinSymbol();
+      let coinList = callCoinSymbol();
+      if (['던프', '던프로토콜'].includes(ticker)) {
+        const dawnUrl = 'https://api.upbit.com/v1/ticker?markets=KRW-DAWN';
+        const dawnData = JSON.parse(org.jsoup.Jsoup.connect(dawnUrl).ignoreContentType(true).get().text());
+        const dawnPrice = dawnData[0]['trade_price'];
+        replier.reply('= ' + numberWithCommas(dawnPrice * volume) + ' 원');
+        return;
+      }
+
       // 코인
       if (ticker in coinList) {
         let coinInfo = callCoinInfo(coinList[ticker]);
         coinInfo = coinInfo.data;
         const currentPrice = coinInfo['closing_price'];
         let money = numberWithCommas(currentPrice * volume);
-        if (money.length > 10) {
-          money = replaceNumToText(money);
-        }
+        let dollor = callDollor();
+        // if (money.length > 10) {
+        //   money = replaceNumToText(money);
+        // }
         replier.reply('= ' + money + ' 원');
+        replier.reply('= ' + Math.round(((currentPrice * volume) / dollor) * 100) / 100 + ' USD');
       } else {
         // 주식
         const data = org.jsoup.Jsoup.connect(
@@ -67,9 +77,9 @@ function main(msg, sender, replier, room, useError) {
         if (unit === 'USD') {
           const dollor = callDollor();
           let money = numberWithCommas(currentInvestPrice * volume * dollor);
-          if (money.length > 10) {
-            money = replaceNumToText(money);
-          }
+          // if (money.length > 10) {
+          //   money = replaceNumToText(money);
+          // }
           replier.reply('= ' + money + ' 원');
         }
       }
@@ -93,6 +103,19 @@ function callCoinSymbol() {
   for (let item of data && data.data && data.data.coinList) {
     result[item.coinName] = item.coinSymbol;
   }
+
+  return result;
+}
+
+function callUpbitCoinSymbol() {
+  let result = {};
+  const upbitUrl = 'https://api.upbit.com/v1/market/all';
+  const data = JSON.parse(org.jsoup.Jsoup.connect(upbitUrl).ignoreContentType(true).get().text());
+
+  for (let item of data && data.data && data.data.coinList) {
+    result[item.coinName] = item.coinSymbol;
+  }
+
   return result;
 }
 
@@ -117,6 +140,14 @@ function replaceNumToText(money) {
   money = money.slice(0, money.length - 10).replace(/,/gi, '');
   money = numberWithCommas(money) + '억';
   return money;
+}
+
+/* 업비트 JSON 함수 */
+
+function upbit_func(coin_symbol) {
+  let upbit_url = 'https://api.upbit.com/v1/ticker?markets=KRW-';
+  upbit_url += coin_symbol;
+  return JSON.parse(org.jsoup.Jsoup.connect(upbit_url).ignoreContentType(true).get().text());
 }
 
 exports.ApiService = main;
