@@ -81,6 +81,6 @@ const newGetTokenPrice = () => {
 };
 
 const selectSign = (target) => (target < 0 ? 'down' : 'up');
-const selectUpDown = (target) => (target === 'down' ? '-' : '+');
+const selectUpDown = (target) => (target >= 0 ? '+' : '');
 
 exports.ApiService = main;
