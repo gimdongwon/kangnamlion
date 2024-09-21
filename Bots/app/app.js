@@ -33,7 +33,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '날씨 ',
       '뜻 ',
       '코로나',
-      '김프',
+      // '김프',
       '실검',
       '로또',
       '사전',
@@ -117,10 +117,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     botName = 'covid19';
   }
 
-  if (msg === '김프') {
-    getKimchiPrimium(replier);
-    botName = 'kimchiPrimium';
-  }
+  // if (msg === '김프') {
+  //   getKimchiPrimium(replier);
+  //   botName = 'kimchiPrimium';
+  // }
 
   if (msg === '실검') {
     getPopularSearch(replier);
