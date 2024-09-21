@@ -4,6 +4,10 @@
 
 지정된 명령어를 통해 주식, 코인 시세 등 다양한 정보를 크롤링해오는 서비스입니다.
 
+
+https://github.com/user-attachments/assets/c01fa738-fb2c-4871-a178-75242bc8b898
+
+
 ## 기술스택
 
 - javascript
