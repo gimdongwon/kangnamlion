@@ -50,10 +50,10 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       }
       let result = '';
       result += title + '\n\n';
-      result += '장전장후 가격 : ' + priorPercent + ' ' + priorPrice + ' ' + currency + '\n';
-      result += '💵종가 : ' + endPrice + ' ' + currency + '\n';
-      result += '🔽등락률 : ' + percent + profitPrice + ' ' + currency + '\n';
-      result += '📈📉24최고최저 : ' + maxPrice + ' | ' + minPrice + currency + '\n\n';
+      result += '장전장후 가격 : ' + priorPercent + ' ' + priorPrice + ' ' + currency.replace('KRW', '원') + '\n';
+      result += '💵종가 : ' + endPrice + ' ' + currency.replace('KRW', '원') + '\n';
+      result += '🔽등락률 : ' + percent + profitPrice + ' ' + currency.replace('KRW', '원') + '\n';
+      result += '📈📉24최고최저 : ' + maxPrice + ' | ' + minPrice + currency.replace('KRW', '원') + '\n\n';
       result += '💰현재가격 : ' + currentPrice + currency.replace('KRW', '원');
 
       const template_args = {
@@ -98,11 +98,12 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
 
         let result = '';
         result += title_N + '\n\n';
-        result += '장전장후 가격 : ' + priorPrice_N + ' ' + currency_N + '\n';
-        result += '💵종가 : ' + priorPrice_N + ' ' + currency_N + '\n';
-        result += '🔽등락률 : ' + difference + ' ' + percent_N + currency_N + '\n';
-        result += '📈📉24최고최저 : ' + maxPrice_N + currency_N + ' | ' + minPrice_N + currency_N + '\n\n';
-        result += '💰현재가격 : ' + currentPrice_N + ' ' + currency_N.replace('KRW', '원');
+        result += '장전장후 가격 : ' + priorPrice_N + ' ' + (currency_N || '원') + '\n';
+        result += '💵종가 : ' + priorPrice_N + ' ' + (currency_N || '원') + '\n';
+        result += '🔽등락률 : ' + difference + ' ' + percent_N + (currency_N || '원') + '\n';
+        result +=
+          '📈📉24최고최저 : ' + maxPrice_N + (currency_N || '원') + ' | ' + minPrice_N + (currency_N || '원') + '\n\n';
+        result += '💰현재가격 : ' + currentPrice_N + ' ' + ((currency_N && currency_N.replace('KRW', '원')) || '원');
         const template_args_N = {
           template_id: 77842,
           template_args: {
@@ -121,7 +122,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       }
     }
   } catch (e) {
-    replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+    // replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
     useError(msg, sender, room, e);
   }
 }

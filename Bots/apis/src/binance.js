@@ -37,7 +37,7 @@ function main(msg, sender, replier, room, useError) {
       // result += '24H 종가 : ' + openingPrice + '원\n';
       replier.reply(result);
     } catch (e) {
-      replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
+      // replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
       useError(msg, sender, room, e);
     }
   }

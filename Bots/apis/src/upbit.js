@@ -69,7 +69,7 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
     useKakaoLink(room, replier, template_args, output_text);
   } catch (error) {
     replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
-    useError(msg, sender, room, e);
+    useError(msg, sender, room, error);
   }
 }
 /* 업비트 JSON 함수 */

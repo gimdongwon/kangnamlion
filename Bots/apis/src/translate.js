@@ -1,5 +1,4 @@
-function main(msg, sender, replier, room) {
-  const useError = Bridge.getScopeOf('useError').replyError;
+function main(msg, sender, replier, room, useError) {
   const word = msg.slice(2);
   try {
     if (word.length === '' || word === '') {
