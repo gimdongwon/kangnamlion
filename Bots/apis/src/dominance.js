@@ -1,6 +1,4 @@
 function main(replier) {
-  // const domi = org.jsoup.Jsoup.connect('https://coinmarketcap.com/ko').get().select('a.cmc-link').get(58).text();
-
   try {
     const domi = JSON.parse(
       org.jsoup.Jsoup.connect('https://api.coingecko.com/api/v3/global').ignoreContentType(true).get().text()
@@ -13,17 +11,15 @@ function main(replier) {
     const sol = domi.market_cap_percentage.sol.toFixed(2) || 0;
 
     // 결과 메시지 작성
-
-    let result = '';
-    result += '도미넌스\n\n';
-    result += 'BTC: ' + btc + '%\n';
-    result += 'ETH: ' + eth + '%\n';
-    result += 'XRP: ' + xrp + '%\n';
-    result += 'SOL: ' + sol + '%';
+    let result = '🌎 코인 도미넌스 (Market Dominance)\n\n';
+    result += '🟡 【비트코인】 BTC : ' + btc + '% 🔥\n';
+    result += '🟦 【이더리움】 ETH : ' + eth + '% 🚀\n';
+    result += '🔵 【리플】 XRP : ' + xrp + '% 💎\n';
+    result += '🟣 【솔라나】 SOL : ' + sol + '% 🌞';
 
     replier.reply(result);
   } catch (error) {
-    replier.reply('에러 발생: ' + error.message);
+    replier.reply('❌ 에러 발생: ' + error.message);
   }
 }
 
