@@ -65,23 +65,54 @@ function main(msg, sender, replier, room, useError) {
         replier.reply('= ' + money + ' 원');
         replier.reply('= ' + Math.round(((currentPrice * volume) / dollor) * 100) / 100 + ' USD');
       } else {
-        // 주식
-        const data = org.jsoup.Jsoup.connect(
-          'https://www.google.com/search?q=주식%20' + ticker.replace(/ /g, '%20')
+        // 주식 가격 조회 (네이버에서 가져오기)
+        const newData = org.jsoup.Jsoup.connect(
+          'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=주식%20' +
+            ticker.replace(/ /g, '%20')
         ).get();
 
-        const unit = data.select('span.knFDje').text();
-        let currentInvestPrice = data.select('span.wT3VGc').text();
-        currentInvestPrice = currentInvestPrice.replace(',', '');
-        replier.reply('= ' + numberWithCommas(currentInvestPrice * volume) + ' ' + unit);
-        if (unit === 'USD') {
-          const dollor = callDollor();
-          let money = numberWithCommas(currentInvestPrice * volume * dollor);
-          // if (money.length > 10) {
-          //   money = replaceNumToText(money);
-          // }
-          replier.reply('= ' + money + ' 원');
+        // 종목명이 존재하는지 확인
+        if (newData.select('span[class=stk_nm]').length > 0) {
+          const title_N = newData.select('span[class=stk_nm]').text();
+          let currentInvestPrice = newData.select('span.spt_con > strong')[0].text().replace(',', '');
+
+          // 한국 주식 여부 확인 (KOSPI, KOSDAQ이 포함된 경우)
+          const stockType = newData.select('div[class^=spt_tlt]').text();
+          const isKoreanStock = stockType.includes('KOSPI') || stockType.includes('KOSDAQ');
+
+          // 통화 단위 설정
+          const unit = isKoreanStock ? '원' : 'USD';
+
+          // 총 투자금 계산
+          let totalInvestPrice = numberWithCommas(currentInvestPrice * volume);
+
+          replier.reply('= ' + totalInvestPrice + ' ' + unit);
+
+          // 미국 주식일 경우, 환율 변환 후 원화로 계산
+          if (!isKoreanStock) {
+            const dollor = callDollor(); // 환율 조회 함수
+            let money = numberWithCommas(currentInvestPrice * volume * dollor);
+            replier.reply('= ' + money + ' 원');
+          }
         }
+        // // 주식
+        // const data = org.jsoup.Jsoup.connect(
+        //   'https://www.google.com/search?q=주식%20' + ticker.replace(/ /g, '%20')
+        // ).get();
+
+        // const unit = data.select('span.IsqQVc').text();
+        // let currentInvestPrice = data.select('span.NprOob').text();
+        // currentInvestPrice = currentInvestPrice.replace(',', '');
+
+        // replier.reply('= ' + numberWithCommas(currentInvestPrice * volume) + ' ' + unit);
+        // if (unit === 'USD') {
+        //   const dollor = callDollor();
+        //   let money = numberWithCommas(currentInvestPrice * volume * dollor);
+        //   // if (money.length > 10) {
+        //   //   money = replaceNumToText(money);
+        //   // }
+        //   replier.reply('= ' + money + ' 원');
+        // }
       }
     }
   } catch (e) {
@@ -99,21 +130,10 @@ function callCoinSymbol() {
   let result = {};
   const bithumbUrl = 'https://gw.bithumb.com/exchange/v1/comn/intro';
   const data = JSON.parse(org.jsoup.Jsoup.connect(bithumbUrl).ignoreContentType(true).get().text());
-
-  for (let item of data && data.data && data.data.coinList) {
-    result[item.coinName] = item.coinSymbol;
-  }
-
-  return result;
-}
-
-function callUpbitCoinSymbol() {
-  let result = {};
-  const upbitUrl = 'https://api.upbit.com/v1/market/all';
-  const data = JSON.parse(org.jsoup.Jsoup.connect(upbitUrl).ignoreContentType(true).get().text());
-
-  for (let item of data && data.data && data.data.coinList) {
-    result[item.coinName] = item.coinSymbol;
+  if (data) {
+    for (let item of data && data.data && data.data.coinList) {
+      result[item.coinName] = item.coinSymbol;
+    }
   }
 
   return result;
