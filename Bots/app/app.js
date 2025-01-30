@@ -17,6 +17,7 @@ const {
   walk,
   gas,
   exchange,
+  dominance,
 } = require('ApiService');
 const { useKakaoLink, useError } = require('common');
 
@@ -33,7 +34,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       '날씨 ',
       '뜻 ',
       '코로나',
-      // '김프',
+      '김프',
       '실검',
       '로또',
       '사전',
@@ -41,6 +42,7 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
       'ㅋㅇㄷ',
       '기위',
       '환율',
+      '도미',
     ].filter((item) => msg.includes(item)).length === 0
   ) {
     return;
@@ -117,10 +119,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     botName = 'covid19';
   }
 
-  // if (msg === '김프') {
-  //   getKimchiPrimium(replier);
-  //   botName = 'kimchiPrimium';
-  // }
+  if (msg === '김프') {
+    getKimchiPrimium(replier);
+    botName = 'kimchiPrimium';
+  }
 
   if (msg === '실검') {
     getPopularSearch(replier);
@@ -151,6 +153,10 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
   if (msg === '환율') {
     exchange(replier);
     botName = 'exchange';
+  }
+  if (msg === '도미') {
+    dominance(replier);
+    botName = 'dominance';
   }
 
   if (commandData[botName]) {

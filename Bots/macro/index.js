@@ -12,9 +12,13 @@ function response(room, msg, sender, isGroupChat, replier, ImageDB) {
     replier.reply('https://taltube.tistory.com/41');
     return;
   }
-  if (msg === '도미') {
-    const domi = org.jsoup.Jsoup.connect('https://coinmarketcap.com/ko').get().select('a.cmc-link').get(4).text();
-    replier.reply(domi);
+  if (msg === '탐욕') {
+    const feer = org.jsoup.Jsoup.connect('https://coinmarketcap.com/ko/charts/bitcoin-dominance')
+      .get()
+      .select('a.cmc-link')
+      .get(58)
+      .text();
+    replier.reply(feer);
     return;
   }
 }
