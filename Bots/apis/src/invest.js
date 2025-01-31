@@ -56,24 +56,26 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
       result += '📈📉24최고최저 : ' + maxPrice + ' | ' + minPrice + currency.replace('KRW', '원') + '\n\n';
       result += '💰현재가격 : ' + currentPrice + currency.replace('KRW', '원');
 
-      const template_args = {
-        template_id: 77842,
-        template_args: {
-          title: title,
-          currentPrice: currentPrice,
-          currency: currency,
-          profitPrice: profitPrice,
-          percent: percent,
-          priorPrice: priorPrice,
-          priorPercent: priorPercent,
-          maxPrice: maxPrice,
-          minPrice: minPrice,
-          endPrice: endPrice,
-          // imageUrl: imageUrl,
-          // dataLength: dataLength,
-        },
-      };
       replier.reply(result);
+
+      // 카카오싱크 코드
+      // const template_args = {
+      //   template_id: 77842,
+      //   template_args: {
+      //     title: title,
+      //     currentPrice: currentPrice,
+      //     currency: currency,
+      //     profitPrice: profitPrice,
+      //     percent: percent,
+      //     priorPrice: priorPrice,
+      //     priorPercent: priorPercent,
+      //     maxPrice: maxPrice,
+      //     minPrice: minPrice,
+      //     endPrice: endPrice,
+      //     // imageUrl: imageUrl,
+      //     // dataLength: dataLength,
+      //   },
+      // };
       // useKakaoLink(room, replier, template_args, result);
     } else {
       let newData = org.jsoup.Jsoup.connect(
@@ -96,34 +98,41 @@ function main(msg, sender, replier, room, useKakaoLink, useError) {
         let currency_N = newData.select('li.frr > dl > dd').text();
         currency_N = currency_N.split(' ')[1];
 
+        // 한국 주식 여부 확인 (KOSPI, KOSDAQ이 포함된 경우)
+        const stockType = newData.select('div[class^=spt_tlt]').text();
+        const isKoreanStock = stockType.includes('KOSPI') || stockType.includes('KOSDAQ');
+
+        // 통화 기호 설정
+        const currencySymbol = isKoreanStock ? '원' : 'USD';
+
         let result = '';
         result += title_N + '\n\n';
-        result += '장전장후 가격 : ' + priorPrice_N + ' ' + (currency_N || '원') + '\n';
-        result += '💵종가 : ' + priorPrice_N + ' ' + (currency_N || '원') + '\n';
-        result += '🔽등락률 : ' + difference + ' ' + percent_N + (currency_N || '원') + '\n';
-        result +=
-          '📈📉24최고최저 : ' + maxPrice_N + (currency_N || '원') + ' | ' + minPrice_N + (currency_N || '원') + '\n\n';
-        result += '💰현재가격 : ' + currentPrice_N + ' ' + ((currency_N && currency_N.replace('KRW', '원')) || '원');
-        const template_args_N = {
-          template_id: 77842,
-          template_args: {
-            title: title_N,
-            currentPrice: currentPrice_N,
-            currency: currency_N,
-            percent: percent_N,
-            endPrice: priorPrice_N,
-            maxPrice: maxPrice_N,
-            minPrice: minPrice_N,
-            profitPrice: difference,
-          },
-        };
+        result += '장전장후 가격 : ' + priorPrice_N + ' ' + currencySymbol + '\n';
+        result += '💵종가 : ' + priorPrice_N + ' ' + currencySymbol + '\n';
+        result += '🔽등락률 : ' + difference + ' ' + percent_N + ' ' + currencySymbol + '\n';
+        result += '📈📉24최고최저 : ' + maxPrice_N + currencySymbol + ' | ' + minPrice_N + currencySymbol + '\n\n';
+        result += '💰현재가격 : ' + currentPrice_N + ' ' + currencySymbol;
+
         replier.reply(result);
+        // const template_args_N = {
+        //   template_id: 77842,
+        //   template_args: {
+        //     title: title_N,
+        //     currentPrice: currentPrice_N,
+        //     currency: currency_N,
+        //     percent: percent_N,
+        //     endPrice: priorPrice_N,
+        //     maxPrice: maxPrice_N,
+        //     minPrice: minPrice_N,
+        //     profitPrice: difference,
+        //   },
+        // };
         // useKakaoLink(room, replier, template_args_N, result);
       }
     }
   } catch (e) {
     // replier.reply('에러가 발생했습니다. 잠시 후에 다시 시도해주세요.');
-    useError(msg, sender, room, e);
+    // useError(msg, sender, room, e);
   }
 }
 

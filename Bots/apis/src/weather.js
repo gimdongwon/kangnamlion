@@ -1,57 +1,48 @@
 function main(msg, sender, replier, room, useKakaoLink, useError) {
-  const region = msg.slice(3);
-  if (isNaN(region)) {
+  const region = msg.slice(3).trim();
+
+  if (region) {
     try {
-      let url = org.jsoup.Jsoup.connect('https://www.google.com/search?q=' + region + ' 날씨').get();
+      // 네이버 검색을 통한 날씨 데이터 가져오기
+      let url = org.jsoup.Jsoup.connect('https://search.naver.com/search.naver?query=' + region + ' 날씨').get();
 
-      let image = 'http:' + url.select('#wob_tci').attr('src');
-      let resultDC = url.select('#wob_dc').text(); //상태?
-      let resultPP = url.select('#wob_pp').text(); //강수확률
-      let resultTM = url.select('#wob_tm').text(); //온도
-      let resultWS = url.select('#wob_ws').text(); //풍속
-      let resultHM = url.select('#wob_hm').text(); //습도
+      let resultDC = url.select('.before_slash').text(); // 날씨 상태
+      let resultTM = url.select('.temperature_text').text(); // 온도
+      let resultSummary = url.select('.summary_list > div.sort').text(); // 기상 요약
 
-      let highTM = url.select('div.wob_ds > div.wNE31c > div.gNCp2e > span.wob_t').text().split(' ')[0];
-      let lowTM = url.select('div.wob_ds > div.wNE31c > div.ZXCv8e > span.wob_t').text().split(' ')[0];
+      // 🌡️ 온도 숫자만 추출
+      let temperatureMatch = resultTM.match(/[-\d.]+/g);
+      let temperature = temperatureMatch ? temperatureMatch[0] : 'N/A';
 
-      if (resultDC == '') {
-        // replier.reply('올바른 지역의 날씨를 검색해주세요. :( \n날씨 서대문역');
-        return;
-      }
-      const obj = {
-        template_id: 79058,
-        template_args: {
-          image: image,
-          region: region,
-          status: resultDC,
-          precipitation: resultPP,
-          temperature: resultTM,
-          wind: resultWS,
-          humidity: resultHM,
-          highTM: highTM,
-          lowTM: lowTM,
-        },
-      };
-      let text = '';
-      text += region + '의 날씨 🌡\n\n';
-      text += '상태 : ' + resultDC + '\n\n';
-      text += '온도 : ' + resultTM + '도\n';
-      text += '최고온도 : ' + highTM + '도\n';
-      text += '최저온도 : ' + lowTM + '도\n';
-      text += '강수확률 : ' + resultPP + '\n';
-      text += '풍속 : ' + resultWS + '\n';
-      text += '습도 : ' + resultHM + '\n\n';
-      text += '좋은 날씨로 좋은 하루보내세요 🦁 🌈☀️❄️💧';
+      // 🌤 날씨 요약 데이터 분리 (체감온도, 강수량, 습도, 풍속)
+      let feelsLike = resultSummary.match(/체감\s*([-.\d]+)/)
+        ? resultSummary.match(/체감\s*([-.\d]+)/)[1] + '℃'
+        : '정보 없음';
+      let precipitation = resultSummary.match(/강수\s*([\d.]+mm)/)
+        ? resultSummary.match(/강수\s*([\d.]+mm)/)[1]
+        : '0mm';
+      let humidity = resultSummary.match(/습도\s*(\d+%)/) ? resultSummary.match(/습도\s*(\d+%)/)[1] : '정보 없음';
+      let wind = resultSummary.match(/([가-힣]+풍\s*[\d.]+m\/s)/)
+        ? resultSummary.match(/([가-힣]+풍\s*[\d.]+m\/s)/)[1]
+        : '정보 없음';
+
+      // 📌 최종 메시지 (일반 문자열 연결 방식 사용)
+      let text = '📍 ' + region + '의 날씨 🌡\n\n';
+      text += '🌤 상태: ' + resultDC + '\n';
+      text += '🌡 온도: ' + temperature + '℃\n\n';
+      text += '📊 체감온도: ' + feelsLike + '\n';
+      text += '💧 강수량: ' + precipitation + '\n';
+      text += '💦 습도: ' + humidity + '\n';
+      text += '💨 풍속: ' + wind + '\n\n';
+      text += '💡 좋은 하루 보내세요! ☀️❄️💨💧';
 
       replier.reply(text);
-      // useKakaoLink(room, replier, obj, text);
     } catch (e) {
-      replier.reply('불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
+      replier.reply('❌ 불러올 수 없는 지역이거나 지원되지 않는 지역입니다.');
       useError(msg, sender, room, e);
     }
   } else {
-    replier.reply('지역을 잘못 나타냈어요(EX.날씨 "조회할 지역")');
-    return;
+    replier.reply("❌ 지역을 입력하세요! 예: '날씨 서울' 또는 '날씨 New York'");
   }
 }
 
